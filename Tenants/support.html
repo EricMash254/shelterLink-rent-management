@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShelterLink - Tenant Support</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h3>ShelterLink</h3>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="tenant_index.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="bills.html"><i class="fas fa-file-invoice"></i> My Bills</a></li>
+                    <li><a href="payments.html"><i class="fas fa-wallet"></i> My Payments</a></li>
+                    <li><a href="messages.html"><i class="fas fa-comments"></i> Messages</a></li>
+                    <li class="active"><a href="support.html"><i class="fas fa-life-ring"></i> Support</a></li>
+                    <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content Wrapper -->
+        <div class="main-content-wrapper">
+            <!-- Main Header -->
+            <header class="main-header">
+                <div class="hamburger-menu">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <div class="search-bar">
+                    <input type="text" placeholder="Search tickets...">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="header-actions">
+                    <i class="fas fa-bell"></i>
+                    <i class="fas fa-user-circle"></i>
+                    <i class="fas fa-ellipsis-v"></i>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <section class="page-header">
+                    <h1>Support Tickets</h1>
+                    <button class="btn-add" id="openTicketFormBtn"><i class="fas fa-plus"></i> Open New Ticket</button>
+                </section>
+
+                <section class="add-form" id="newTicketForm" style="display: none;">
+                    <h2>Submit New Support Ticket</h2>
+                    <div class="form-group">
+                        <label for="ticketSubject">Subject</label>
+                        <input type="text" id="ticketSubject" placeholder="e.g., Maintenance Request, Billing Inquiry">
+                    </div>
+                    <div class="form-group">
+                        <label for="ticketMessage">Message</label>
+                        <textarea id="ticketMessage" rows="6" placeholder="Describe your issue in detail..."></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn-primary" id="submitTicketBtn">Submit Ticket</button>
+                        <button class="btn-cancel" id="cancelTicketBtn">Cancel</button>
+                    </div>
+                </section>
+
+                <section class="data-table section">
+                    <h2>My Submitted Tickets</h2>
+                    <div class="table-controls">
+                        <label>Show <select><option>10</option><option>25</option></select> entries</label>
+                        <input type="text" placeholder="Search my tickets...">
+                    </div>
+                    <div class="my-tickets-list data-table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Ticket ID</th>
+                                    <th>Subject</th>
+                                    <th>Submitted On</th>
+                                    <th>Status</th>
+                                    <th>Last Update</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="myTicketsTableBody">
+                                <!-- Tenant's tickets will be dynamically loaded here by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section class="section message-detail-section" id="ticketDetailView" style="display: none;">
+                    <div class="detail-header">
+                        <button class="btn-secondary" id="backToTicketsBtn"><i class="fas fa-arrow-left"></i> Back to My Tickets</button>
+                        <h2>Ticket Details - <span id="detailTicketId"></span></h2>
+                    </div>
+                    <p><strong>Subject:</strong> <span id="detailSubject"></span></p>
+                    <p><strong>Submitted On:</strong> <span id="detailDateSubmitted"></span></p>
+                    <p><strong>Status:</strong> <span id="detailStatus" class="status-badge"></span></p>
+                    <h3>Original Message:</h3>
+                    <div class="ticket-message-content">
+                        <p id="detailMessage"></p>
+                    </div>
+                    <h3>Conversation History:</h3>
+                    <div class="conversation-history" id="conversationHistory">
+                        <!-- Messages will be loaded here -->
+                    </div>
+                    <h3>Reply to Ticket:</h3>
+                    <div class="message-input-area">
+                        <textarea id="replyMessageInput" rows="3" placeholder="Type your reply here..."></textarea>
+                        <button class="btn-primary" id="sendReplyBtn"><i class="fas fa-paper-plane"></i> Send Reply</button>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script src="../Landlord/js/main.js"></script> <!-- Reusing main.js for sidebar toggle -->
+    <script>
+        // Prevent right-click context menu
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const openTicketFormBtn = document.getElementById('openTicketFormBtn');
+            const newTicketForm = document.getElementById('newTicketForm');
+            const cancelTicketBtn = document.getElementById('cancelTicketBtn');
+            const submitTicketBtn = document.getElementById('submitTicketBtn');
+            const myTicketsTableBody = document.getElementById('myTicketsTableBody');
+            const ticketDetailView = document.getElementById('ticketDetailView');
+            const backToTicketsBtn = document.getElementById('backToTicketsBtn');
+            const sendReplyBtn = document.getElementById('sendReplyBtn');
+            const replyMessageInput = document.getElementById('replyMessageInput');
+
+            // Dummy Data for Tenant's Tickets
+            let tenantTickets = [
+                {
+                    id: '#TEN001',
+                    subject: 'Leaky Faucet in Bathroom',
+                    submittedOn: '2025-07-20',
+                    status: 'Open',
+                    lastUpdate: '2025-07-21',
+                    originalMessage: 'The faucet in my bathroom has been leaking for the past two days. It\'s getting worse and wasting a lot of water. Could someone please come to fix it?',
+                    conversation: [
+                        { sender: 'You', message: 'The faucet in my bathroom has been leaking for the past two days. It\'s getting worse and wasting a lot of water. Could someone please come to fix it?', timestamp: '2025-07-20 09:00 AM' },
+                        { sender: 'Landlord', message: 'Received your request. We\'ll send a plumber by tomorrow morning.', timestamp: '2025-07-20 10:00 AM' },
+                        { sender: 'You', message: 'Thanks for the quick response!', timestamp: '2025-07-20 10:30 AM' }
+                    ]
+                },
+                {
+                    id: '#TEN002',
+                    subject: 'No Hot Water in Unit',
+                    submittedOn: '2025-07-19',
+                    status: 'Pending',
+                    lastUpdate: '2025-07-19',
+                    originalMessage: 'The hot water in my unit stopped working this morning. I checked the heater, but it seems fine. Could it be a building issue?',
+                    conversation: [
+                        { sender: 'You', message: 'The hot water in my unit stopped working this morning. I checked the heater, but it seems fine. Could it be a building issue?', timestamp: '2025-07-19 14:00 PM' },
+                        { sender: 'Landlord', message: 'We are investigating a potential issue with the building\'s main water heater. We will update you soon.', timestamp: '2025-07-19 15:30 PM' }
+                    ]
+                },
+                {
+                    id: '#TEN003',
+                    subject: 'Query about July Rent',
+                    submittedOn: '2025-07-10',
+                    status: 'Closed',
+                    lastUpdate: '2025-07-11',
+                    originalMessage: 'I have a question regarding the July rent statement. Could you clarify the service charge amount?',
+                    conversation: [
+                        { sender: 'You', message: 'I have a question regarding the July rent statement. Could you clarify the service charge amount?', timestamp: '2025-07-10 11:00 AM' },
+                        { sender: 'Landlord', message: 'The service charge includes common area cleaning and security. A detailed breakdown has been sent to your email.', timestamp: '2025-07-11 09:00 AM' }
+                    ]
+                }
+            ];
+
+            function renderMyTicketsTable() {
+                myTicketsTableBody.innerHTML = '';
+                tenantTickets.forEach(ticket => {
+                    const row = myTicketsTableBody.insertRow();
+                    let statusClass = '';
+                    if (ticket.status === 'Open') {
+                        statusClass = 'pending'; // Using 'pending' for open tickets
+                    } else if (ticket.status === 'Pending') {
+                        statusClass = 'pending'; // Using 'pending' for pending tickets
+                    } else if (ticket.status === 'Closed') {
+                        statusClass = 'paid'; // Using 'paid' for closed tickets
+                    }
+
+                    row.innerHTML = `
+                        <td>${ticket.id}</td>
+                        <td>${ticket.subject}</td>
+                        <td>${ticket.submittedOn}</td>
+                        <td><span class="status-badge ${statusClass}">${ticket.status}</span></td>
+                        <td>${ticket.lastUpdate}</td>
+                        <td class="actions-column">
+                            <button class="btn-info view-ticket-btn" data-ticket-id="${ticket.id}"><i class="fas fa-eye"></i> View</button>
+                            ${ticket.status !== 'Closed' ? `<button class="btn-primary reply-ticket-btn" data-ticket-id="${ticket.id}"><i class="fas fa-reply"></i> Reply</button>` : ''}
+                        </td>
+                    `;
+                });
+
+                // Add event listeners for "View" and "Reply" buttons
+                document.querySelectorAll('.view-ticket-btn, .reply-ticket-btn').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const ticketId = this.dataset.ticketId;
+                        showTicketDetails(ticketId);
+                    });
+                });
+            }
+
+            function showTicketDetails(id) {
+                const ticket = tenantTickets.find(t => t.id === id);
+                if (ticket) {
+                    document.getElementById('detailTicketId').textContent = ticket.id;
+                    document.getElementById('detailSubject').textContent = ticket.subject;
+                    document.getElementById('detailDateSubmitted').textContent = ticket.submittedOn;
+
+                    const statusSpan = document.getElementById('detailStatus');
+                    statusSpan.textContent = ticket.status;
+                    if (ticket.status === 'Open' || ticket.status === 'Pending') {
+                        statusSpan.className = 'status-badge pending';
+                    } else if (ticket.status === 'Closed') {
+                        statusSpan.className = 'status-badge paid';
+                    }
+
+                    document.getElementById('detailMessage').textContent = ticket.originalMessage;
+
+                    const conversationHistoryDiv = document.getElementById('conversationHistory');
+                    conversationHistoryDiv.innerHTML = ''; // Clear previous conversation
+
+                    ticket.conversation.forEach(msg => {
+                        const messageDiv = document.createElement('div');
+                        messageDiv.classList.add('message-entry');
+                        messageDiv.classList.add(msg.sender === 'You' ? 'my-message' : 'their-message');
+                        messageDiv.innerHTML = `
+                            <p><strong>${msg.sender}:</strong> ${msg.message}</p>
+                            <span class="message-date">${msg.timestamp}</span>
+                        `;
+                        conversationHistoryDiv.appendChild(messageDiv);
+                    });
+
+                    conversationHistoryDiv.scrollTop = conversationHistoryDiv.scrollHeight; // Scroll to bottom
+
+                    // Hide other sections and show ticket detail view
+                    document.querySelector('.data-table.section').style.display = 'none';
+                    newTicketForm.style.display = 'none';
+                    openTicketFormBtn.style.display = 'none'; // Hide "Open New Ticket" button
+                    ticketDetailView.style.display = 'block';
+
+                    // Store current ticket ID for reply functionality
+                    ticketDetailView.dataset.currentThreadId = id;
+
+                    // Enable/disable reply input based on ticket status
+                    if (ticket.status === 'Closed') {
+                        replyMessageInput.disabled = true;
+                        replyMessageInput.placeholder = 'This ticket is closed. You cannot reply.';
+                        sendReplyBtn.disabled = true;
+                    } else {
+                        replyMessageInput.disabled = false;
+                        replyMessageInput.placeholder = 'Type your reply here...';
+                        sendReplyBtn.disabled = false;
+                    }
+                }
+            }
+
+            function showTicketList() {
+                ticketDetailView.style.display = 'none';
+                newTicketForm.style.display = 'none';
+                document.querySelector('.data-table.section').style.display = 'block';
+                openTicketFormBtn.style.display = 'block'; // Show "Open New Ticket" button
+                renderMyTicketsTable(); // Ensure list is up-to-date
+            }
+
+            // Event Listeners
+            openTicketFormBtn.addEventListener('click', () => {
+                newTicketForm.style.display = 'block';
+                document.querySelector('.data-table.section').style.display = 'none'; // Hide table
+                openTicketFormBtn.style.display = 'none'; // Hide button
+                document.getElementById('ticketSubject').value = '';
+                document.getElementById('ticketMessage').value = '';
+            });
+
+            cancelTicketBtn.addEventListener('click', showTicketList);
+
+            submitTicketBtn.addEventListener('click', function() {
+                const subject = document.getElementById('ticketSubject').value.trim();
+                const message = document.getElementById('ticketMessage').value.trim();
+
+                if (!subject || !message) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Missing Information',
+                        text: 'Please enter both a subject and a message for your ticket.',
+                        confirmButtonText: 'OK'
+                    });
+                    return;
+                }
+
+                const newTicketId = `#TEN${String(tenantTickets.length + 1).padStart(3, '0')}`;
+                const now = new Date();
+                const dateString = now.toISOString().split('T')[0]; // YYYY-MM-DD
+                const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                const newTicket = {
+                    id: newTicketId,
+                    subject: subject,
+                    submittedOn: dateString,
+                    status: 'Open',
+                    lastUpdate: dateString,
+                    originalMessage: message,
+                    conversation: [
+                        { sender: 'You', message: message, timestamp: `${dateString} ${timeString}` }
+                    ]
+                };
+
+                tenantTickets.unshift(newTicket); // Add to the beginning of the list
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Ticket Submitted!',
+                    text: `Your ticket (${newTicketId}) has been submitted. The landlord will review it shortly.`,
+                    showConfirmButton: false,
+                    timer: 2000
+                }).then(() => {
+                    showTicketList(); // Go back to ticket list
+                });
+            });
+
+            sendReplyBtn.addEventListener('click', function() {
+                const replyText = replyMessageInput.value.trim();
+                if (!replyText) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Empty Reply',
+                        text: 'Please type a message before sending your reply.',
+                        confirmButtonText: 'OK'
+                    });
+                    return;
+                }
+
+                const currentTicketId = ticketDetailView.dataset.currentThreadId;
+                const currentTicket = tenantTickets.find(t => t.id === currentTicketId);
+
+                if (currentTicket && currentTicket.status !== 'Closed') {
+                    const now = new Date();
+                    const dateString = now.toISOString().split('T')[0];
+                    const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                    const newReplyEntry = {
+                        sender: 'You',
+                        message: replyText,
+                        timestamp: `${dateString} ${timeString}`
+                    };
+                    currentTicket.conversation.push(newReplyEntry);
+                    currentTicket.lastUpdate = dateString; // Update last update date
+                    currentTicket.status = 'Open'; // Ensure status is 'Open' after a reply
+
+                    // Re-render conversation history
+                    const conversationHistoryDiv = document.getElementById('conversationHistory');
+                    const messageDiv = document.createElement('div');
+                    messageDiv.classList.add('message-entry');
+                    messageDiv.classList.add('my-message');
+                    messageDiv.innerHTML = `
+                        <p><strong>You:</strong> ${replyText}</p>
+                        <span class="message-date">${newReplyEntry.timestamp}</span>
+                    `;
+                    conversationHistoryDiv.appendChild(messageDiv);
+                    conversationHistoryDiv.scrollTop = conversationHistoryDiv.scrollHeight; // Scroll to new message
+
+                    replyMessageInput.value = ''; // Clear input field
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Reply Sent!',
+                        text: 'Your reply has been added to the ticket.',
+                        showConfirmButton: false,
+                        timer: 1000
+                    });
+                    renderMyTicketsTable(); // Update table status if needed
+                } else if (currentTicket && currentTicket.status === 'Closed') {
+                    Swal.fire({
+                        icon: 'info',
+                        title: 'Ticket Closed',
+                        text: 'This ticket is already closed and cannot be replied to.',
+                        confirmButtonText: 'OK'
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Could not find the current ticket thread.',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+
+            // Initial render
+            renderMyTicketsTable();
+        });
+    </script>
+</body>
+</html>

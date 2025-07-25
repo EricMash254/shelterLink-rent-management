@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShelterLink - Expenses</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h3>ShelterLink</h3>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="landlord_index.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="properties.html"><i class="fas fa-building"></i> Properties</a></li>
+                    <li><a href="units.html"><i class="fas fa-door-open"></i> Units</a></li>
+                    <li><a href="tenants.html"><i class="fas fa-users"></i> Tenants</a></li>
+                    <li><a href="payments.html"><i class="fas fa-wallet"></i> Payments</a></li>
+                    <li class="active"><a href="expenses.html"><i class="fas fa-money-bill-wave"></i> Expenses</a></li>
+                    <li><a href="water-bills.html"><i class="fas fa-faucet"></i> Water Bills</a></li>
+                    <li><a href="reports.html"><i class="fas fa-chart-line"></i> Reports</a></li>
+                    <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+                    <li><a href="support.html"><i class="fas fa-life-ring"></i> Support</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content Wrapper -->
+        <div class="main-content-wrapper">
+            <!-- Main Header -->
+            <header class="main-header">
+                <div class="hamburger-menu">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <div class="search-bar">
+                    <input type="text" placeholder="Search individual...">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="header-actions">
+                    <i class="fas fa-bell"></i>
+                    <i class="fas fa-user-circle"></i>
+                    <i class="fas fa-ellipsis-v"></i>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <section class="page-header">
+                    <h1>Expenses Management</h1>
+                    <button class="btn-add" id="addExpenseBtn"><i class="fas fa-plus"></i> Add New Expense</button>
+                </section>
+
+                <section class="add-form" id="addExpenseForm" style="display: none;">
+                    <h2>Add New Expense</h2>
+                    <div class="form-group">
+                        <label for="expenseType">Expense Type</label>
+                        <select id="expenseType">
+                            <option value="">Choose Type...</option>
+                            <option value="Maintenance">Maintenance</option>
+                            <option value="Utilities">Utilities</option>
+                            <option value="Repairs">Repairs</option>
+                            <option value="Management Fee">Management Fee</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="expenseUnit">Unit (Optional)</label>
+                        <select id="expenseUnit">
+                            <option value="">Select Unit (if unit-specific)...</option>
+                            <!-- Units will be loaded here by JS -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="expenseCategory">Category</label>
+                        <input type="text" id="expenseCategory" placeholder="e.g., Plumbing, Electrical">
+                    </div>
+                    <div class="form-group">
+                        <label for="expenseAmount">Amount (Ksh)</label>
+                        <input type="number" id="expenseAmount" placeholder="e.g., 2500">
+                    </div>
+                    <div class="form-group">
+                        <label for="expenseDate">Date</label>
+                        <input type="date" id="expenseDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="recipientName">Recipient Name</label>
+                        <input type="text" id="recipientName" placeholder="e.g., Juma Plumbers">
+                    </div>
+                    <div class="form-group">
+                        <label for="recipientAccount">Recipient Account/Mobile Number</label>
+                        <input type="text" id="recipientAccount" placeholder="e.g., 2547XXXXXXXX">
+                    </div>
+                    <div class="form-group">
+                        <label for="expenseDescription">Description</label>
+                        <textarea id="expenseDescription" rows="3" placeholder="Detailed description of the expense"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn-add" id="saveExpenseBtn">Add Expense</button>
+                        <button class="btn-cancel" id="cancelExpenseBtn">Cancel</button>
+                    </div>
+                </section>
+
+                <section class="data-table section">
+                    <h2>All Expenses</h2>
+                    <div class="table-controls">
+                        <label>Show <select><option>10</option><option>25</option></select> entries</label>
+                        <input type="text" placeholder="Search...">
+                    </div>
+                    <div class="expense-list">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Type</th>
+                                    <th>Category</th>
+                                    <th>Amount</th>
+                                    <th>Unit</th>
+                                    <th>Description</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="expensesTableBody">
+                                <!-- Expense rows will be dynamically loaded here by JS -->
+                                <tr>
+                                    <td>2025-06-15</td>
+                                    <td>Maintenance</td>
+                                    <td>Plumbing</td>
+                                    <td>Ksh 2,000</td>
+                                    <td>A-101</td>
+                                    <td>Fixing leaky faucet</td>
+                                    <td>
+                                        <button class="btn-edit"><i class="fas fa-edit"></i> Edit</button>
+                                        <button class="btn-delete"><i class="fas fa-trash-alt"></i> Delete</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/main.js"></script>
+    <!-- Add page-specific JS if needed, e.g., <script src="js/expenses.js"></script> -->
+</body>
+</html>

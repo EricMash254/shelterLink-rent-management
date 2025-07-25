@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShelterLink - Tenant Dashboard</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h3>ShelterLink</h3>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li class="active"><a href="tenant_index.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="bills.html"><i class="fas fa-file-invoice"></i> My Bills</a></li>
+                    <li><a href="payments.html"><i class="fas fa-wallet"></i> My Payments</a></li>
+                    <li><a href="messages.html"><i class="fas fa-comments"></i> Messages</a></li>
+                    <li><a href="support.html"><i class="fas fa-life-ring"></i> Support</a></li>
+                    <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content Wrapper -->
+        <div class="main-content-wrapper">
+            <!-- Main Header -->
+            <header class="main-header">
+                <div class="hamburger-menu">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <div class="search-bar">
+                    <input type="text" placeholder="Search...">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="header-actions">
+                    <i class="fas fa-bell"></i>
+                    <i class="fas fa-user-circle"></i>
+                    <i class="fas fa-ellipsis-v"></i>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <section class="page-header">
+                    <h1>Welcome, <span id="tenantNameDisplay">Tenant!</span></h1>
+                </section>
+
+                <section class="section">
+                    <h2>My Summary</h2>
+                    <div class="card-grid">
+                        <div class="card">
+                            <h3>Current Balance</h3>
+                            <div class="value" id="currentBalance">Ksh 0</div>
+                            <p class="description">Your outstanding amount</p>
+                        </div>
+                        <div class="card">
+                            <h3>Next Rent Due</h3>
+                            <div class="value" id="nextRentDue">Ksh 0</div>
+                            <p class="description" id="nextRentDueDate">Due: N/A</p>
+                        </div>
+                        <div class="card">
+                            <h3>Open Tickets</h3>
+                            <div class="value" id="openTickets">0</div>
+                            <p class="description">Active support requests</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="data-table section">
+                    <h2>Recent Bills</h2>
+                    <div class="data-table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Bill Type</th>
+                                    <th>Month</th>
+                                    <th>Amount</th>
+                                    <th>Due Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentBillsTableBody">
+                                <!-- Bills will be dynamically loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section class="data-table section">
+                    <h2>Recent Payments</h2>
+                    <div class="data-table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Amount</th>
+                                    <th>Type</th>
+                                    <th>Method</th>
+                                    <th>Reference</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentPaymentsTableBody">
+                                <!-- Payments will be dynamically loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Announcements</h2>
+                    <div id="announcementsList">
+                        <p>No new announcements at this time.</p>
+                        <!-- Announcements will be dynamically loaded here -->
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../Landlord/js/main.js"></script> <!-- Reusing main.js for sidebar toggle -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Dummy Data for Tenant Dashboard
+            const tenantData = {
+                name: "Alice Johnson",
+                currentBalance: 1500,
+                nextRentDue: 20000,
+                nextRentDueDate: "2025-08-01",
+                openTickets: 1,
+                // Removed totalPaymentsYTD from dummy data as the card is removed
+            };
+
+            const recentBills = [
+                { type: "Rent", month: "July 2025", amount: 20000, dueDate: "2025-07-01", status: "Overdue" },
+                { type: "Water", month: "June 2025", amount: 750, dueDate: "2025-06-15", status: "Paid" },
+                { type: "Service Charge", month: "July 2025", amount: 1000, dueDate: "2025-07-01", status: "Overdue" }
+            ];
+
+            const recentPayments = [
+                { date: "2025-06-28", amount: 20000, type: "Rent", method: "M-Pesa", reference: "MPESAABC123" },
+                { date: "2025-06-10", amount: 750, type: "Water", method: "Bank Transfer", reference: "BANKXYZ456" }
+            ];
+
+            const announcements = [
+                { date: "2025-07-20", title: "Planned Water Interruption", message: "Please note there will be a planned water interruption on July 25th from 9 AM to 2 PM for maintenance." },
+                { date: "2025-07-15", title: "Security Upgrade Notice", message: "The property's main gate security system will be upgraded on August 1st. Expect minor delays." }
+            ];
+
+            // Populate Summary Cards
+            document.getElementById('tenantNameDisplay').textContent = tenantData.name;
+            document.getElementById('currentBalance').textContent = `Ksh ${tenantData.currentBalance.toLocaleString()}`;
+            document.getElementById('nextRentDue').textContent = `Ksh ${tenantData.nextRentDue.toLocaleString()}`;
+            document.getElementById('nextRentDueDate').textContent = `Due: ${tenantData.nextRentDueDate}`;
+            document.getElementById('openTickets').textContent = tenantData.openTickets;
+            // Removed line populating totalPaymentsYTD as the card is removed
+            // document.getElementById('totalPaymentsYTD').textContent = `Ksh ${tenantData.totalPaymentsYTD.toLocaleString()}`;
+
+            // Populate Recent Bills Table
+            const recentBillsTableBody = document.getElementById('recentBillsTableBody');
+            if (recentBills.length === 0) {
+                recentBillsTableBody.innerHTML = '<tr><td colspan="6" style="text-align: center;">No recent bills.</td></tr>';
+            } else {
+                recentBills.forEach(bill => {
+                    const row = recentBillsTableBody.insertRow();
+                    const statusClass = bill.status === 'Paid' ? 'paid' : 'overdue';
+                    row.innerHTML = `
+                        <td>${bill.type}</td>
+                        <td>${bill.month}</td>
+                        <td>Ksh ${bill.amount.toLocaleString()}</td>
+                        <td>${bill.dueDate}</td>
+                        <td><span class="status-badge ${statusClass}">${bill.status}</span></td>
+                        <td class="actions-column">
+                            ${bill.status !== 'Paid' ? `<button class="btn-primary">Pay Now</button>` : ''}
+                            <button class="btn-info">View Details</button>
+                        </td>
+                    `;
+                });
+            }
+
+            // Populate Recent Payments Table
+            const recentPaymentsTableBody = document.getElementById('recentPaymentsTableBody');
+            if (recentPayments.length === 0) {
+                recentPaymentsTableBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No recent payments.</td></tr>';
+            } else {
+                recentPayments.forEach(payment => {
+                    const row = recentPaymentsTableBody.insertRow();
+                    row.innerHTML = `
+                        <td>${payment.date}</td>
+                        <td>Ksh ${payment.amount.toLocaleString()}</td>
+                        <td>${payment.type}</td>
+                        <td>${payment.method}</td>
+                        <td>${payment.reference}</td>
+                    `;
+                });
+            }
+
+            // Populate Announcements
+            const announcementsList = document.getElementById('announcementsList');
+            if (announcements.length === 0) {
+                announcementsList.innerHTML = '<p>No new announcements at this time.</p>';
+            } else {
+                announcementsList.innerHTML = ''; // Clear default message
+                announcements.forEach(announcement => {
+                    const div = document.createElement('div');
+                    div.classList.add('section-item'); // You might want to add specific styling for this class
+                    div.innerHTML = `
+                        <h4>${announcement.title} <span style="font-size: 0.8em; color: #888;">(${announcement.date})</span></h4>
+                        <p>${announcement.message}</p>
+                        <hr style="margin: 15px 0; border: 0; border-top: 1px dashed #eee;">
+                    `;
+                    announcementsList.appendChild(div);
+                });
+            }
+
+            // Sidebar toggle logic (from main.js, but duplicated here for self-containment)
+            const hamburgerMenu = document.querySelector('.hamburger-menu');
+            const sidebar = document.querySelector('.sidebar');
+            const mainContentWrapper = document.querySelector('.main-content-wrapper');
+
+            hamburgerMenu.addEventListener('click', () => {
+                sidebar.classList.toggle('show');
+                mainContentWrapper.classList.toggle('expanded');
+            });
+
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', (event) => {
+                if (window.innerWidth <= 768 && sidebar.classList.contains('show')) {
+                    if (!sidebar.contains(event.target) && !hamburgerMenu.contains(event.target)) {
+                        sidebar.classList.remove('show');
+                        mainContentWrapper.classList.remove('expanded');
+                    }
+                }
+            });
+
+            // Prevent right-click context menu
+            document.addEventListener('contextmenu', event => event.preventDefault());
+        });
+    </script>
+</body>
+</html>

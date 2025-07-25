@@ -1,0 +1,500 @@
+/* General Styling for Landing Page */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+:root {
+    --primary-color: #006eff; /* blue */
+    --secondary-color: #8d4b00; /* brown */
+    --text-color: #333;
+    --light-text-color: #666;
+    --background-light: #f8f9fa;
+    --background-dark: #2c3e50; /* Dark background for sections */
+    --card-background: #ffffff;
+    --shadow-light: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--background-light);
+    overflow-x: hidden; /* Prevent horizontal scroll on small screens */
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+a {
+    text-decoration: none;
+    color: var(--primary-color);
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: var(--secondary-color);
+}
+
+ul {
+    list-style: none;
+}
+
+/* Navbar */
+.navbar {
+    background-color: var(--card-background);
+    padding: 15px 0;
+    box-shadow: var(--shadow-light);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.navbar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar .logo {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin: 0;
+}
+
+.navbar nav ul {
+    display: flex;
+    gap: 25px;
+}
+
+.navbar nav ul li a {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.navbar nav ul li a:hover {
+    color: var(--primary-color);
+}
+
+/* Mobile Menu Toggle */
+.menu-toggle {
+    display: none; /* Hidden by default, shown on small screens */
+    font-size: 1.8rem;
+    cursor: pointer;
+    color: var(--text-color);
+}
+
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('../images/landing_hero.jpg') no-repeat center center/cover;
+    color: white;
+    text-align: center;
+    padding: 100px 0;
+    min-height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.hero-content h2 {
+    font-size: 3.5rem;
+    margin-bottom: 20px;
+    line-height: 1.2;
+    font-weight: 700;
+}
+
+.hero-content p {
+    font-size: 1.3rem;
+    margin-bottom: 40px;
+    opacity: 0.9;
+}
+
+.cta-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap; /* Allows buttons to wrap on smaller screens */
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 30px;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.btn-landlord {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.btn-landlord:hover {
+    background-color: #2980b9;
+    border-color: #2980b9;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn-tenant {
+    background-color: var(--secondary-color);
+    color: white;
+    border-color: var(--secondary-color);
+}
+
+.btn-tenant:hover {
+    background-color: #006786;
+    border-color: #006786;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Sections General */
+section {
+    padding: 80px 0;
+}
+
+section h3 {
+    font-size: 2.5rem;
+    margin-bottom: 50px;
+    color: var(--text-color);
+    text-align: center;
+}
+
+/* Features Section */
+.features-section {
+    background-color: var(--background-light);
+    text-align: center;
+}
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.feature-card {
+    background-color: var(--card-background);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: var(--shadow-light);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.12);
+}
+
+.feature-icon {
+    font-size: 3.5rem;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+}
+
+.feature-card h4 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: var(--text-color);
+}
+
+.feature-card p {
+    font-size: 1rem;
+    color: var(--light-text-color);
+}
+
+/* About Section */
+.about-section {
+    background-color: #e9ecef; /* A slightly different light background */
+    text-align: center;
+}
+
+.about-section p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    max-width: 800px;
+    margin: 0 auto 20px auto;
+    color: var(--light-text-color);
+}
+
+/* Footer */
+.footer {
+    background-color: var(--background-dark);
+    color: white;
+    padding: 50px 0 20px 0;
+    font-size: 0.95rem;
+}
+
+.footer .footer-content {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.footer-section {
+    flex: 1;
+    min-width: 250px; /* Ensures columns don't become too narrow */
+}
+
+.footer-section h3 {
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+    color: var(--primary-color);
+}
+
+.footer-section p {
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 10px;
+}
+
+.footer-section ul {
+    padding: 0;
+}
+
+.footer-section ul li {
+    margin-bottom: 8px;
+}
+
+.footer-section ul li a {
+    color: rgba(255, 255, 255, 0.8);
+    transition: color 0.3s ease;
+}
+
+.footer-section ul li a:hover {
+    color: white;
+}
+
+.footer-section.contact-info i {
+    margin-right: 10px;
+    color: var(--secondary-color);
+}
+
+.footer .social-links a {
+    display: inline-block;
+    width: 38px;
+    height: 38px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 38px;
+    font-size: 1.1rem;
+    margin-right: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.footer .social-links a:hover {
+    background-color: var(--primary-color);
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+    .hero-content h2 {
+        font-size: 3rem;
+    }
+    .hero-content p {
+        font-size: 1.2rem;
+    }
+    section {
+        padding: 70px 0;
+    }
+    section h3 {
+        font-size: 2.2rem;
+    }
+    .feature-grid {
+        gap: 25px;
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar .container {
+        flex-direction: row; /* Keep logo and toggle on one row */
+        justify-content: space-between; /* Space them out */
+        align-items: center;
+        padding: 0 15px;
+    }
+
+    .navbar nav {
+        display: none; /* Hide navigation by default */
+        flex-direction: column;
+        width: 100%;
+        position: absolute;
+        top: 60px; /* Below the navbar */
+        left: 0;
+        background-color: var(--card-background);
+        box-shadow: var(--shadow-light);
+        padding-bottom: 15px;
+        transition: all 0.3s ease-in-out;
+        opacity: 0;
+        pointer-events: none; /* Disable interaction when hidden */
+        transform: translateY(-20px); /* Start slightly above */
+    }
+
+    .navbar nav.active {
+        display: flex; /* Show navigation when active */
+        opacity: 1;
+        pointer-events: auto; /* Enable interaction */
+        transform: translateY(0); /* Slide into view */
+    }
+
+    .navbar nav ul {
+        flex-direction: column;
+        gap: 0; /* Remove gap for stacked menu items */
+        width: 100%;
+    }
+
+    .navbar nav ul li {
+        width: 100%;
+        border-bottom: 1px solid var(--background-light); /* Separator for menu items */
+    }
+
+    .navbar nav ul li:last-child {
+        border-bottom: none;
+    }
+
+    .navbar nav ul li a {
+        padding: 15px 20px; /* Larger tap target for menu items */
+        text-align: left;
+        width: 100%;
+        display: block; /* Make link fill the list item */
+        color: var(--text-color);
+    }
+
+    .navbar nav ul li a:hover {
+        background-color: var(--background-light);
+    }
+
+    .menu-toggle {
+        display: block; /* Show hamburger icon */
+    }
+
+    .hero-section {
+        padding: 80px 15px; /* Add horizontal padding to hero */
+        min-height: 500px;
+    }
+
+    .hero-content h2 {
+        font-size: 2.5rem;
+    }
+
+    .hero-content p {
+        font-size: 1rem;
+    }
+
+    .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .btn {
+        width: 80%; /* Make buttons wider on small screens */
+        max-width: 300px;
+        padding: 12px 25px; /* Slightly smaller padding */
+        font-size: 1rem; /* Slightly smaller font */
+    }
+
+    section {
+        padding: 60px 15px; /* Responsive padding for sections */
+    }
+
+    section h3 {
+        font-size: 2rem;
+        margin-bottom: 30px; /* Adjust margin */
+    }
+
+    .feature-grid {
+        grid-template-columns: 1fr; /* Stack features vertically */
+    }
+
+    .feature-card {
+        padding: 25px; /* Adjust card padding */
+    }
+
+    .feature-icon {
+        font-size: 3rem; /* Slightly smaller icons */
+    }
+
+    .feature-card h4 {
+        font-size: 1.3rem; /* Slightly smaller heading */
+    }
+
+    .feature-card p {
+        font-size: 0.95rem; /* Slightly smaller paragraph */
+    }
+
+    .about-section p {
+        font-size: 1rem;
+    }
+
+    .footer .footer-content {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 20px; /* Adjust gap */
+    }
+
+    .footer-section {
+        min-width: unset; /* Remove min-width on small screens */
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-section {
+        padding: 60px 15px; /* More responsive padding */
+        min-height: 400px; /* Smaller min-height */
+    }
+
+    .hero-content h2 {
+        font-size: 2rem;
+    }
+
+    .hero-content p {
+        font-size: 0.9rem;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+
+    .navbar .logo {
+        font-size: 1.5rem; /* Smaller logo on very small screens */
+    }
+
+    .navbar nav ul li a {
+        font-size: 0.95rem; /* Smaller nav links */
+    }
+
+    section h3 {
+        font-size: 1.8rem;
+    }
+}

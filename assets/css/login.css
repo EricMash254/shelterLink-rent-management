@@ -1,0 +1,181 @@
+/* General Styling for Login Page */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+:root {
+    --primary-color: #006eff; /* blue */
+    --secondary-color: #8d4b00; /* brown */
+    --background-color: #f4f7f6;
+    --card-background: #ffffff;
+    --text-color: #333;
+    --light-text-color: #666;
+    --border-color: #e0e0e0;
+    --shadow-light: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--background-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px; /* Add some padding for very small screens */
+}
+
+.login-container {
+    width: 100%;
+    max-width: 450px; /* Max width for the login box */
+    background-color: var(--card-background);
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: var(--shadow-light);
+    text-align: center;
+}
+
+.login-box .logo {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+}
+
+.login-box h2 {
+    font-size: 1.8rem;
+    margin-bottom: 30px;
+    color: var(--text-color);
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--light-text-color);
+}
+
+.form-group input[type="text"],
+.form-group input[type="password"] {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="password"]:focus {
+    border-color: var(--primary-color);
+    outline: none;
+}
+
+.form-options {
+    display: flex;
+    justify-content: flex-end; /* Align to the right */
+    margin-bottom: 25px;
+}
+
+.forgot-password {
+    font-size: 0.95rem;
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.forgot-password:hover {
+    color: var(--secondary-color);
+}
+
+.btn-login {
+    width: 100%;
+    padding: 15px;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-login:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-2px);
+}
+
+.register-link {
+    margin-top: 25px;
+    font-size: 0.95rem;
+    color: var(--light-text-color);
+}
+
+.register-link a {
+    color: var(--secondary-color);
+    font-weight: 600;
+}
+
+.register-link a:hover {
+    color: var(--primary-color);
+}
+
+.back-to-landing {
+    margin-top: 30px;
+    font-size: 0.9rem;
+}
+
+.back-to-landing a {
+    color: var(--light-text-color);
+}
+
+.back-to-landing a:hover {
+    color: var(--primary-color);
+}
+
+/* Responsive adjustments for login page */
+@media (max-width: 480px) {
+    .login-container {
+        padding: 15px; /* Reduce overall padding */
+    }
+
+    .login-box {
+        padding: 30px 20px; /* Adjust inner padding of the box */
+    }
+
+    .login-box .logo {
+        font-size: 2rem;
+    }
+
+    .login-box h2 {
+        font-size: 1.6rem;
+        margin-bottom: 25px;
+    }
+
+    .form-group label {
+        font-size: 0.9rem;
+    }
+
+    .form-group input {
+        padding: 10px 12px;
+        font-size: 0.95rem;
+    }
+
+    .btn-login {
+        padding: 12px;
+        font-size: 1rem;
+    }
+
+    .register-link, .back-to-landing {
+        font-size: 0.85rem;
+    }
+}

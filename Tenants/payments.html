@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShelterLink - My Payments</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h3>ShelterLink</h3>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="tenant_index.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="bills.html"><i class="fas fa-file-invoice"></i> My Bills</a></li>
+                    <li class="active"><a href="payments.html"><i class="fas fa-wallet"></i> My Payments</a></li>
+                    <li><a href="messages.html"><i class="fas fa-comments"></i> Messages</a></li>
+                    <li><a href="support.html"><i class="fas fa-life-ring"></i> Support</a></li>
+                    <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content Wrapper -->
+        <div class="main-content-wrapper">
+            <!-- Main Header -->
+            <header class="main-header">
+                <div class="hamburger-menu">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <div class="search-bar">
+                    <input type="text" placeholder="Search payments...">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="header-actions">
+                    <i class="fas fa-bell"></i>
+                    <i class="fas fa-user-circle"></i>
+                    <i class="fas fa-ellipsis-v"></i>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <section class="page-header">
+                    <h1>My Payments</h1>
+                </section>
+
+                <section class="section">
+                    <h2>Payment Summary</h2>
+                    <div class="card-grid">
+                        <div class="card">
+                            <i class="fas fa-coins card-icon"></i>
+                            <h3>Payments Last Month</h3>
+                            <div class="value" id="paymentsLastMonth">Ksh 0</div>
+                            <p class="description">Total payments for the previous month</p>
+                        </div>
+                        <div class="card">
+                            <i class="fas fa-calendar-check card-icon"></i>
+                            <h3>Last Payment Date</h3>
+                            <div class="value" id="lastPaymentDate">N/A</div>
+                            <p class="description">Date of your most recent payment</p>
+                        </div>
+                        <div class="card">
+                            <i class="fas fa-receipt card-icon"></i>
+                            <h3>Total Receipts</h3>
+                            <div class="value" id="totalReceipts">0</div>
+                            <p class="description">Number of payment receipts</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="data-table section">
+                    <h2>All Payment History</h2>
+                    <div class="table-controls">
+                        <label>Show <select><option>10</option><option>25</option></select> entries</label>
+                        <input type="text" placeholder="Search payments...">
+                    </div>
+                    <div class="payments-list data-table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Bill Type</th>
+                                    <th>Amount Paid</th>
+                                    <th>Method</th>
+                                    <th>Reference</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="paymentsTableBody">
+                                <!-- Payments will be dynamically loaded here by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script src="../Landlord/js/main.js"></script> <!-- Reusing main.js for sidebar toggle -->
+    <script>
+        // Prevent right-click context menu
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Dummy Data for Payments
+            let payments = [
+                { id: 'P001', date: '2025-07-28', billType: 'Rent', amount: 20000, method: 'M-Pesa', reference: 'MPESAXYZ789' },
+                { id: 'P002', date: '2025-06-10', billType: 'Water', amount: 750, method: 'Bank Transfer', reference: 'BANKABC456' },
+                { id: 'P003', date: '2025-05-25', billType: 'Rent', amount: 20000, method: 'M-Pesa', reference: 'MPESADEF012' },
+                { id: 'P004', date: '2025-04-15', billType: 'Service Charge', amount: 1000, method: 'Cash', reference: 'CASH345' }
+            ];
+
+            function renderPaymentsTable() {
+                const tableBody = document.getElementById('paymentsTableBody');
+                tableBody.innerHTML = '';
+                let paymentsLastMonth = 0;
+                let lastPaymentDate = 'N/A';
+                let totalReceipts = 0;
+
+                // Get current date
+                const now = new Date();
+                const currentMonth = now.getMonth();
+                const currentYear = now.getFullYear();
+
+                // Calculate last month's year and month (0-indexed)
+                let lastMonth = currentMonth - 1;
+                let lastMonthYear = currentYear;
+                if (lastMonth < 0) {
+                    lastMonth = 11; // December of previous year
+                    lastMonthYear--;
+                }
+
+                // Sort payments by date descending for "Last Payment Date"
+                payments.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                payments.forEach(payment => {
+                    const paymentDate = new Date(payment.date);
+                    
+                    // Check if payment was made last month
+                    if (paymentDate.getMonth() === lastMonth && paymentDate.getFullYear() === lastMonthYear) {
+                        paymentsLastMonth += payment.amount;
+                    }
+
+                    const row = tableBody.insertRow();
+                    row.innerHTML = `
+                        <td>${payment.date}</td>
+                        <td>${payment.billType}</td>
+                        <td>Ksh ${payment.amount.toLocaleString()}</td>
+                        <td>${payment.method}</td>
+                        <td>${payment.reference}</td>
+                        <td class="actions-column">
+                            <button class="btn-info view-receipt-btn" data-payment-id="${payment.id}"><i class="fas fa-eye"></i> View Receipt</button>
+                        </td>
+                    `;
+                    totalReceipts++;
+                });
+
+                // Set summary card values
+                document.getElementById('paymentsLastMonth').textContent = `Ksh ${paymentsLastMonth.toLocaleString()}`;
+                if (payments.length > 0) {
+                    lastPaymentDate = payments[0].date; // Most recent payment after sorting
+                }
+                document.getElementById('lastPaymentDate').textContent = lastPaymentDate;
+                document.getElementById('totalReceipts').textContent = totalReceipts;
+
+                // Add event listeners for "View Receipt" buttons
+                document.querySelectorAll('.view-receipt-btn').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const paymentId = this.dataset.paymentId;
+                        const payment = payments.find(p => p.id === paymentId);
+                        if (payment) {
+                            Swal.fire({
+                                title: 'Payment Receipt',
+                                html: `
+                                    <p><strong>Date:</strong> ${payment.date}</p>
+                                    <p><strong>Bill Type:</strong> ${payment.billType}</p>
+                                    <p><strong>Amount:</strong> Ksh ${payment.amount.toLocaleString()}</p>
+                                    <p><strong>Method:</strong> ${payment.method}</p>
+                                    <p><strong>Reference:</strong> ${payment.reference}</p>
+                                    <p style="margin-top: 15px; font-style: italic; color: #777;">This is a dummy receipt. Full receipt functionality would be implemented here.</p>
+                                `,
+                                icon: 'info',
+                                confirmButtonText: 'Close'
+                            });
+                        }
+                    });
+                });
+            }
+
+            renderPaymentsTable(); // Initial render
+        });
+    </script>
+</body>
+</html>

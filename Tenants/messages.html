@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShelterLink - My Messages</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h3>ShelterLink</h3>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="tenant_index.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="bills.html"><i class="fas fa-file-invoice"></i> My Bills</a></li>
+                    <li><a href="payments.html"><i class="fas fa-wallet"></i> My Payments</a></li>
+                    <li class="active"><a href="messages.html"><i class="fas fa-comments"></i> Messages</a></li>
+                    <li><a href="support.html"><i class="fas fa-life-ring"></i> Support</a></li>
+                    <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content Wrapper -->
+        <div class="main-content-wrapper">
+            <!-- Main Header -->
+            <header class="main-header">
+                <div class="hamburger-menu">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <div class="search-bar">
+                    <input type="text" placeholder="Search messages...">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="header-actions">
+                    <i class="fas fa-bell"></i>
+                    <i class="fas fa-user-circle"></i>
+                    <i class="fas fa-ellipsis-v"></i>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <section class="page-header">
+                    <h1>My Messages</h1>
+                    <button class="btn-add" id="newMessageBtn"><i class="fas fa-plus"></i> New Message</button>
+                </section>
+
+                <section class="section message-list-section" id="messageListSection">
+                    <h2>Message Threads</h2>
+                    <div class="message-threads-container">
+                        <div class="message-thread" data-thread-id="thread1">
+                            <div class="thread-header">
+                                <h3>Landlord - Regarding Rent Payment</h3>
+                                <span class="thread-date">2025-07-28</span>
+                            </div>
+                            <p class="thread-snippet">You: "Hi, I just made the rent payment for July. Can you confirm receipt?"</p>
+                            <span class="thread-status unread">Unread</span>
+                        </div>
+                        <div class="message-thread" data-thread-id="thread2">
+                            <div class="thread-header">
+                                <h3>Landlord - Water Leak in Bathroom</h3>
+                                <span class="thread-date">2025-07-20</span>
+                            </div>
+                            <p class="thread-snippet">Landlord: "We've scheduled a plumber for tomorrow morning."</p>
+                            <span class="thread-status read">Read</span>
+                        </div>
+                        <div class="message-thread" data-thread-id="thread3">
+                            <div class="thread-header">
+                                <h3>Landlord - General Announcement</h3>
+                                <span class="thread-date">2025-07-15</span>
+                            </div>
+                            <p class="thread-snippet">Landlord: "Please be advised of upcoming security system upgrades."</p>
+                            <span class="thread-status read">Read</span>
+                        </div>
+                        <!-- More message threads will be dynamically loaded here -->
+                    </div>
+                </section>
+
+                <section class="section message-detail-section" id="messageDetailSection" style="display: none;">
+                    <div class="detail-header">
+                        <button class="btn-secondary" id="backToThreadsBtn"><i class="fas fa-arrow-left"></i> Back to Threads</button>
+                        <h2>Conversation with <span id="conversationPartner">Landlord</span></h2>
+                    </div>
+                    <div class="conversation-history" id="conversationHistory">
+                        <!-- Messages will be loaded here -->
+                    </div>
+                    <div class="message-input-area">
+                        <textarea id="messageInput" rows="3" placeholder="Type your message here..."></textarea>
+                        <button class="btn-primary" id="sendMessageBtn"><i class="fas fa-paper-plane"></i> Send</button>
+                    </div>
+                </section>
+
+                <section class="section new-message-form" id="newMessageForm" style="display: none;">
+                    <h2>New Message</h2>
+                    <div class="form-group">
+                        <label for="messageSubject">Subject</label>
+                        <input type="text" id="messageSubject" placeholder="e.g., Question about rent, Maintenance request">
+                    </div>
+                    <div class="form-group">
+                        <label for="newMessageContent">Message</label>
+                        <textarea id="newMessageContent" rows="5" placeholder="Write your message here..."></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn-primary" id="submitNewMessageBtn">Send Message</button>
+                        <button class="btn-cancel" id="cancelNewMessageBtn">Cancel</button>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script src="../Landlord/js/main.js"></script> <!-- Reusing main.js for sidebar toggle -->
+    <script>
+        // Prevent right-click context menu
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const messageListSection = document.getElementById('messageListSection');
+            const messageDetailSection = document.getElementById('messageDetailSection');
+            const newMessageForm = document.getElementById('newMessageForm');
+            const newMessageBtn = document.getElementById('newMessageBtn');
+            const backToThreadsBtn = document.getElementById('backToThreadsBtn');
+            const submitNewMessageBtn = document.getElementById('submitNewMessageBtn');
+            const cancelNewMessageBtn = document.getElementById('cancelNewMessageBtn');
+            const messageInput = document.getElementById('messageInput');
+            const sendMessageBtn = document.getElementById('sendMessageBtn');
+
+            // Dummy Data for Message Threads and Conversations
+            let messageThreads = [
+                {
+                    id: 'thread1',
+                    partner: 'Landlord',
+                    subject: 'Regarding Rent Payment',
+                    lastMessageSnippet: 'You: "Hi, I just made the rent payment for July. Can you confirm receipt?"',
+                    date: '2025-07-28',
+                    status: 'unread',
+                    conversation: [
+                        { sender: 'You', message: 'Hi, I just made the rent payment for July. Can you confirm receipt?', timestamp: '2025-07-28 10:00 AM' },
+                        { sender: 'Landlord', message: 'Received and confirmed! Your balance will be updated shortly.', timestamp: '2025-07-28 10:15 AM' }
+                    ]
+                },
+                {
+                    id: 'thread2',
+                    partner: 'Landlord',
+                    subject: 'Water Leak in Bathroom',
+                    lastMessageSnippet: 'Landlord: "We\'ve scheduled a plumber for tomorrow morning."',
+                    date: '2025-07-20',
+                    status: 'read',
+                    conversation: [
+                        { sender: 'You', message: 'Hi, I have a water leak in my bathroom. It started yesterday and is getting worse.', timestamp: '2025-07-20 09:00 AM' },
+                        { sender: 'Landlord', message: 'Thanks for letting us know. We\'ve scheduled a plumber for tomorrow morning. They will contact you to confirm a time.', timestamp: '2025-07-20 11:00 AM' },
+                        { sender: 'You', message: 'Great, thank you!', timestamp: '2025-07-20 11:15 AM' }
+                    ]
+                },
+                {
+                    id: 'thread3',
+                    partner: 'Landlord',
+                    subject: 'General Announcement',
+                    lastMessageSnippet: 'Landlord: "Please be advised of upcoming security system upgrades."',
+                    date: '2025-07-15',
+                    status: 'read',
+                    conversation: [
+                        { sender: 'Landlord', message: 'Dear Tenants, please be advised that there will be upcoming security system upgrades on August 1st. Expect minor disruptions.', timestamp: '2025-07-15 02:00 PM' }
+                    ]
+                }
+            ];
+
+            function renderMessageThreads() {
+                const threadsContainer = document.querySelector('.message-threads-container');
+                threadsContainer.innerHTML = ''; // Clear existing threads
+
+                messageThreads.forEach(thread => {
+                    const threadDiv = document.createElement('div');
+                    threadDiv.classList.add('message-thread');
+                    threadDiv.classList.add(thread.status); // Add read/unread class
+                    threadDiv.dataset.threadId = thread.id;
+
+                    threadDiv.innerHTML = `
+                        <div class="thread-header">
+                            <h3>${thread.partner} - ${thread.subject}</h3>
+                            <span class="thread-date">${thread.date}</span>
+                        </div>
+                        <p class="thread-snippet">${thread.lastMessageSnippet}</p>
+                        <span class="thread-status ${thread.status}">${thread.status}</span>
+                    `;
+                    threadsContainer.appendChild(threadDiv);
+                });
+
+                // Add click listeners to open message details
+                document.querySelectorAll('.message-thread').forEach(threadDiv => {
+                    threadDiv.addEventListener('click', function() {
+                        const threadId = this.dataset.threadId;
+                        showMessageDetail(threadId);
+                    });
+                });
+            }
+
+            function showMessageDetail(threadId) {
+                const thread = messageThreads.find(t => t.id === threadId);
+                if (thread) {
+                    document.getElementById('conversationPartner').textContent = thread.partner;
+                    const conversationHistoryDiv = document.getElementById('conversationHistory');
+                    conversationHistoryDiv.innerHTML = ''; // Clear previous conversation
+
+                    thread.conversation.forEach(msg => {
+                        const messageDiv = document.createElement('div');
+                        messageDiv.classList.add('message-entry');
+                        messageDiv.classList.add(msg.sender === 'You' ? 'my-message' : 'their-message'); // Apply sender-specific styling
+                        messageDiv.innerHTML = `
+                            <p><strong>${msg.sender}:</strong> ${msg.message}</p>
+                            <span class="message-date">${msg.timestamp}</span>
+                        `;
+                        conversationHistoryDiv.appendChild(messageDiv);
+                    });
+
+                    // Scroll to the bottom of the conversation
+                    conversationHistoryDiv.scrollTop = conversationHistoryDiv.scrollHeight;
+
+                    // Mark as read if it was unread
+                    if (thread.status === 'unread') {
+                        thread.status = 'read';
+                        renderMessageThreads(); // Re-render to update status badge
+                    }
+
+                    messageListSection.style.display = 'none';
+                    newMessageForm.style.display = 'none';
+                    messageDetailSection.style.display = 'block';
+                }
+            }
+
+            function showMessageList() {
+                messageDetailSection.style.display = 'none';
+                newMessageForm.style.display = 'none';
+                messageListSection.style.display = 'block';
+                renderMessageThreads(); // Ensure list is up-to-date
+            }
+
+            function showNewMessageForm() {
+                messageListSection.style.display = 'none';
+                messageDetailSection.style.display = 'none';
+                newMessageForm.style.display = 'block';
+                document.getElementById('messageSubject').value = '';
+                document.getElementById('newMessageContent').value = '';
+            }
+
+            // Event Listeners
+            newMessageBtn.addEventListener('click', showNewMessageForm);
+            backToThreadsBtn.addEventListener('click', showMessageList);
+
+            submitNewMessageBtn.addEventListener('click', function() {
+                const subject = document.getElementById('messageSubject').value.trim();
+                const content = document.getElementById('newMessageContent').value.trim();
+
+                if (!subject || !content) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Missing Information',
+                        text: 'Please enter both a subject and a message.',
+                        confirmButtonText: 'OK'
+                    });
+                    return;
+                }
+
+                // Simulate sending a new message/creating a new thread
+                const newThreadId = `thread${messageThreads.length + 1}`;
+                const now = new Date();
+                const dateString = now.toISOString().split('T')[0]; // YYYY-MM-DD
+                const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                const newMessage = {
+                    id: newThreadId,
+                    partner: 'Landlord', // Assuming messages are always to the landlord
+                    subject: subject,
+                    lastMessageSnippet: `You: "${content.substring(0, 50)}${content.length > 50 ? '...' : ''}"`,
+                    date: dateString,
+                    status: 'unread', // Landlord will need to read it
+                    conversation: [
+                        { sender: 'You', message: content, timestamp: `${dateString} ${timeString}` }
+                    ]
+                };
+
+                messageThreads.unshift(newMessage); // Add to the beginning of the list
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Message Sent!',
+                    text: 'Your message has been sent to the landlord.',
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(() => {
+                    showMessageList(); // Go back to message list
+                });
+            });
+
+            cancelNewMessageBtn.addEventListener('click', showMessageList);
+
+            sendMessageBtn.addEventListener('click', function() {
+                const messageText = messageInput.value.trim();
+                if (!messageText) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Empty Message',
+                        text: 'Please type a message before sending.',
+                        confirmButtonText: 'OK'
+                    });
+                    return;
+                }
+
+                const currentThreadId = document.getElementById('messageDetailSection').dataset.currentThreadId; // Assuming you store this
+                const currentThread = messageThreads.find(t => t.id === currentThreadId);
+
+                if (currentThread) {
+                    const now = new Date();
+                    const dateString = now.toISOString().split('T')[0];
+                    const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                    const newMessageEntry = {
+                        sender: 'You',
+                        message: messageText,
+                        timestamp: `${dateString} ${timeString}`
+                    };
+                    currentThread.conversation.push(newMessageEntry);
+                    currentThread.lastMessageSnippet = `You: "${messageText.substring(0, 50)}${messageText.length > 50 ? '...' : ''}"`;
+                    currentThread.date = dateString; // Update last message date
+
+                    // Re-render conversation history
+                    const conversationHistoryDiv = document.getElementById('conversationHistory');
+                    const messageDiv = document.createElement('div');
+                    messageDiv.classList.add('message-entry');
+                    messageDiv.classList.add('my-message');
+                    messageDiv.innerHTML = `
+                        <p><strong>You:</strong> ${messageText}</p>
+                        <span class="message-date">${newMessageEntry.timestamp}</span>
+                    `;
+                    conversationHistoryDiv.appendChild(messageDiv);
+                    conversationHistoryDiv.scrollTop = conversationHistoryDiv.scrollHeight; // Scroll to new message
+
+                    messageInput.value = ''; // Clear input field
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Message Sent!',
+                        text: 'Your reply has been added to the conversation.',
+                        showConfirmButton: false,
+                        timer: 1000
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Could not find the current conversation thread.',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+
+            // Initial render
+            renderMessageThreads();
+        });
+    </script>
+</body>
+</html>

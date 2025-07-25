@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShelterLink - Support Tickets</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h3>ShelterLink</h3>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="landlord_index.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="properties.html"><i class="fas fa-building"></i> Properties</a></li>
+                    <li><a href="units.html"><i class="fas fa-door-open"></i> Units</a></li>
+                    <li><a href="tenants.html"><i class="fas fa-users"></i> Tenants</a></li>
+                    <li><a href="payments.html"><i class="fas fa-wallet"></i> Payments</a></li>
+                    <li><a href="expenses.html"><i class="fas fa-money-bill-wave"></i> Expenses</a></li>
+                    <li><a href="water-bills.html"><i class="fas fa-faucet"></i> Water Bills</a></li>
+                    <li><a href="reports.html"><i class="fas fa-chart-line"></i> Reports</a></li>
+                    <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+                    <li class="active"><a href="support.html"><i class="fas fa-life-ring"></i> Support</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content Wrapper -->
+        <div class="main-content-wrapper">
+            <!-- Main Header -->
+            <header class="main-header">
+                <div class="hamburger-menu">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <div class="search-bar">
+                    <input type="text" placeholder="Search individual...">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="header-actions">
+                    <i class="fas fa-bell"></i>
+                    <i class="fas fa-user-circle"></i>
+                    <i class="fas fa-ellipsis-v"></i>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <section class="page-header">
+                    <h1>Tenant Support Tickets</h1>
+                    <!-- No "Add New" button here, as landlords view tickets, not create them directly -->
+                </section>
+
+                <section class="section">
+                    <h2>Ticket Overview</h2>
+                    <div class="card-grid">
+                        <div class="card">
+                            <h3>Total Tickets</h3>
+                            <div class="value">15</div>
+                        </div>
+                        <div class="card">
+                            <h3>Open Tickets</h3>
+                            <div class="value">5</div>
+                        </div>
+                        <div class="card">
+                            <h3>Closed Tickets</h3>
+                            <div class="value">10</div>
+                        </div>
+                        <div class="card">
+                            <h3>New Tickets (Today)</h3>
+                            <div class="value">2</div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="data-table section">
+                    <h2>All Tenant Tickets</h2>
+                    <div class="table-controls">
+                        <label>Show <select><option>10</option><option>25</option><option>50</option></select> entries</label>
+                        <input type="text" placeholder="Search tickets...">
+                    </div>
+                    <div class="ticket-list data-table-container"> <!-- Added data-table-container for potential scroll -->
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Ticket ID</th>
+                                    <th>Tenant / Unit</th>
+                                    <th>Subject</th>
+                                    <th>Date Submitted</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ticketsTableBody">
+                                <!-- Example Ticket Rows (will be dynamic via JS) -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section class="section" id="ticketDetailView" style="display: none;">
+                    <h2>Ticket Details - <span id="detailTicketId"></span></h2>
+                    <p><strong>Tenant:</strong> <span id="detailTenantName"></span> (<span id="detailUnit"></span>)</p>
+                    <p><strong>Subject:</strong> <span id="detailSubject"></span></p>
+                    <p><strong>Submitted On:</strong> <span id="detailDateSubmitted"></span></p>
+                    <p><strong>Status:</strong> <span id="detailStatus" class="status-badge"></span></p>
+                    <h3>Message:</h3>
+                    <div class="ticket-message-content">
+                        <p id="detailMessage"></p>
+                    </div>
+                    <h3>Conversation History:</h3>
+                    <div class="conversation-history" id="conversationHistory">
+                        <!-- Messages will be loaded here -->
+                    </div>
+                    <h3>Respond to Ticket:</h3>
+                    <div class="form-group">
+                        <textarea id="responseMessage" rows="4" placeholder="Type your response here..."></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn-add" id="sendResponseBtn">Send Response</button>
+                        <button class="btn-cancel" id="closeDetailView">Back to Tickets</button>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Dummy data for demonstration
+            const tickets = [
+                { id: '#SLT001', tenant: 'John Doe', unit: 'A-101', subject: 'Leaky Faucet in Bathroom', date: '2025-07-20', status: 'Open', message: 'The faucet in my bathroom has been leaking for the past two days. It\'s getting worse and wasting a lot of water. Could someone please come to fix it?', conversation: [{sender: 'Landlord', msg: 'Received your request. We\'ll send a plumber by tomorrow morning.', date: '2025-07-20 10:00 AM'}, {sender: 'Tenant', msg: 'Thanks for the quick response!', date: '2025-07-20 10:30 AM'}] },
+                { id: '#SLT002', tenant: 'Jane Smith', unit: 'B-205', subject: 'No Hot Water', date: '2025-07-19', status: 'Open', message: 'The hot water in my unit stopped working this morning. I checked the heater, but it seems fine. Could it be a building issue?', conversation: [{sender: 'Landlord', msg: 'We are investigating a potential issue with the building\'s main water heater. We will update you soon.', date: '2025-07-19 14:00 PM'}] },
+                { id: '#SLT003', tenant: 'Peter Jones', unit: 'C-302', subject: 'Payment query for June rent', date: '2025-07-18', status: 'Closed', message: 'I paid my June rent but still see an outstanding balance. My M-Pesa reference is XYZ789ABC. Can you confirm receipt?', conversation: [{sender: 'Landlord', msg: 'Confirmed receipt of your payment. The balance has been updated. Apologies for the delay.', date: '2025-07-18 11:00 AM'}, {sender: 'Tenant', msg: 'Thank you for confirming!', date: '2025-07-18 11:15 AM'}] }
+            ];
+
+            const ticketsTableBody = document.getElementById('ticketsTableBody');
+            const ticketDetailView = document.getElementById('ticketDetailView');
+            const closeDetailViewBtn = document.getElementById('closeDetailView');
+            const pageHeader = document.querySelector('.page-header');
+            const ticketOverviewSection = document.querySelector('.section:nth-of-type(1)'); // The card grid section
+
+            function renderTickets() {
+                ticketsTableBody.innerHTML = '';
+                tickets.forEach(ticket => {
+                    const row = ticketsTableBody.insertRow();
+                    row.innerHTML = `
+                        <td>${ticket.id}</td>
+                        <td>${ticket.tenant} (${ticket.unit})</td>
+                        <td>${ticket.subject}</td>
+                        <td>${ticket.date}</td>
+                        <td><span class="status-badge ${ticket.status === 'Open' ? 'pending' : 'paid'}">${ticket.status}</span></td>
+                        <td class="actions-column">
+                            <button class="btn-info view-ticket-btn" data-ticket-id="${ticket.id}"><i class="fas fa-eye"></i> View</button>
+                            ${ticket.status === 'Open' ? `<button class="btn-primary respond-ticket-btn" data-ticket-id="${ticket.id}">Respond</button>` : ''}
+                            ${ticket.status === 'Open' ? `<button class="btn-secondary close-ticket-btn" data-ticket-id="${ticket.id}">Close Ticket</button>` : ''}
+                        </td>
+                    `;
+                });
+
+                document.querySelectorAll('.view-ticket-btn').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const ticketId = this.dataset.ticketId;
+                        showTicketDetails(ticketId);
+                    });
+                });
+            }
+
+            function showTicketDetails(id) {
+                const ticket = tickets.find(t => t.id === id);
+                if (ticket) {
+                    document.getElementById('detailTicketId').textContent = ticket.id;
+                    document.getElementById('detailTenantName').textContent = ticket.tenant;
+                    document.getElementById('detailUnit').textContent = ticket.unit;
+                    document.getElementById('detailSubject').textContent = ticket.subject;
+                    document.getElementById('detailDateSubmitted').textContent = ticket.date;
+
+                    const statusSpan = document.getElementById('detailStatus');
+                    statusSpan.textContent = ticket.status;
+                    statusSpan.className = `status-badge ${ticket.status === 'Open' ? 'pending' : 'paid'}`;
+
+                    document.getElementById('detailMessage').textContent = ticket.message;
+
+                    const conversationHistory = document.getElementById('conversationHistory');
+                    conversationHistory.innerHTML = '';
+                    ticket.conversation.forEach(entry => {
+                        const messageDiv = document.createElement('div');
+                        messageDiv.classList.add('message-entry');
+                        messageDiv.classList.add(entry.sender === 'Landlord' ? 'landlord-message' : 'tenant-message');
+                        messageDiv.innerHTML = `<p><strong>${entry.sender}:</strong> ${entry.msg} <span class="message-date">[${entry.date}]</span></p>`;
+                        conversationHistory.appendChild(messageDiv);
+                    });
+
+
+                    // Hide other sections and show ticket detail view
+                    document.querySelector('.data-table.section').style.display = 'none';
+                    pageHeader.style.display = 'none';
+                    ticketOverviewSection.style.display = 'none'; // Hide overview cards
+                    ticketDetailView.style.display = 'block';
+                }
+            }
+
+            closeDetailViewBtn.addEventListener('click', function() {
+                ticketDetailView.style.display = 'none';
+                document.querySelector('.data-table.section').style.display = 'block';
+                pageHeader.style.display = 'flex'; // Restore flex display
+                ticketOverviewSection.style.display = 'block'; // Show overview cards
+            });
+
+            // Initial render
+            renderTickets();
+        });
+    </script>

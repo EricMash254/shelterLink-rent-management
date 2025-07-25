@@ -1,0 +1,182 @@
+/* General Styling for Register Page */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+:root {
+    --primary-color: #006eff; /* blue */
+    --secondary-color: #8d4b00; /* brown */
+    --background-color: #f4f7f6;
+    --card-background: #ffffff;
+    --text-color: #333;
+    --light-text-color: #666;
+    --border-color: #e0e0e0;
+    --shadow-light: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--background-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px; /* Add some padding for very small screens */
+}
+
+.register-container {
+    width: 100%;
+    max-width: 500px; /* Slightly wider for more fields */
+    background-color: var(--card-background);
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: var(--shadow-light);
+    text-align: center;
+}
+
+.register-box .logo {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+}
+
+.register-box h2 {
+    font-size: 1.8rem;
+    margin-bottom: 30px;
+    color: var(--text-color);
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--light-text-color);
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"],
+.form-group select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="email"]:focus,
+.form-group input[type="password"]:focus,
+.form-group select:focus {
+    border-color: var(--primary-color);
+    outline: none;
+}
+
+.form-group select {
+    appearance: none; /* Remove default arrow */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20256%20512%22%3E%3Cpath%20fill%3D%22%23444%22%20d%3D%22M192%20416H64c-8.8%200-16-7.2-16-16V112c0-8.8%207.2-16%2016-16h128c8.8%200%2016%207.2%2016%2016v288c0%208.8-7.2%2016-16%2016zM128%20352c-17.7%200-32-14.3-32-32s14.3-32%2032-32%2032%2014.3%2032%2032-14.3%2032-32%2032z%22%2F%3E%3C%2Fsvg%3E'); /* Custom arrow */
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 12px;
+    padding-right: 40px; /* Make space for arrow */
+}
+
+
+.btn-register {
+    width: 100%;
+    padding: 15px;
+    background-color: var(--secondary-color); /* Green for register button */
+    color: white;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 10px; /* Space above button */
+}
+
+.btn-register:hover {
+    background-color: var(--primary-color);
+    transform: translateY(-2px);
+}
+
+.login-link {
+    margin-top: 25px;
+    font-size: 0.95rem;
+    color: var(--light-text-color);
+}
+
+.login-link a {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.login-link a:hover {
+    color: #2980b9;
+}
+
+.back-to-landing {
+    margin-top: 30px;
+    font-size: 0.9rem;
+}
+
+.back-to-landing a {
+    color: var(--light-text-color);
+}
+
+.back-to-landing a:hover {
+    color: var(--primary-color);
+}
+
+/* Responsive adjustments for register page */
+@media (max-width: 480px) {
+    .register-container {
+        padding: 15px; /* Reduce overall padding */
+    }
+
+    .register-box {
+        padding: 30px 20px; /* Adjust inner padding of the box */
+    }
+
+    .register-box .logo {
+        font-size: 2rem;
+    }
+
+    .register-box h2 {
+        font-size: 1.6rem;
+        margin-bottom: 25px;
+    }
+
+    .form-group label {
+        font-size: 0.9rem;
+    }
+
+    .form-group input,
+    .form-group select {
+        padding: 10px 12px;
+        font-size: 0.95rem;
+    }
+
+    .btn-register {
+        padding: 12px;
+        font-size: 1rem;
+    }
+
+    .login-link, .back-to-landing {
+        font-size: 0.85rem;
+    }
+}

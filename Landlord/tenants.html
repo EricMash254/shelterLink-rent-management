@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShelterLink - Tenants</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h3>ShelterLink</h3>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="landlord_index.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="properties.html"><i class="fas fa-building"></i> Properties</a></li>
+                    <li><a href="units.html"><i class="fas fa-door-open"></i> Units</a></li>
+                    <li class="active"><a href="tenants.html"><i class="fas fa-users"></i> Tenants</a></li>
+                    <li><a href="payments.html"><i class="fas fa-wallet"></i> Payments</a></li>
+                    <li><a href="expenses.html"><i class="fas fa-money-bill-wave"></i> Expenses</a></li>
+                    <li><a href="water-bills.html"><i class="fas fa-faucet"></i> Water Bills</a></li>
+                    <li><a href="reports.html"><i class="fas fa-chart-line"></i> Reports</a></li>
+                    <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+                    <li><a href="support.html"><i class="fas fa-life-ring"></i> Support</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content Wrapper -->
+        <div class="main-content-wrapper">
+            <!-- Main Header -->
+            <header class="main-header">
+                <div class="hamburger-menu">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <div class="search-bar">
+                    <input type="text" placeholder="Search individual...">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="header-actions">
+                    <i class="fas fa-bell"></i>
+                    <i class="fas fa-user-circle"></i>
+                    <i class="fas fa-ellipsis-v"></i>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <section class="page-header">
+                    <h1>Tenants Management</h1>
+                    <button class="btn-add" id="addTenantBtn"><i class="fas fa-plus"></i> Add New Tenant</button>
+                </section>
+
+                <section class="add-form" id="addTenantForm" style="display: none;">
+                    <h2>Add New Tenant</h2>
+                    <div class="form-group">
+                        <label for="tenantNationality">Nationality</label>
+                        <input type="text" id="tenantNationality" placeholder="e.g., Kenyan">
+                    </div>
+                    <div class="form-group">
+                        <label for="tenantType">Tenant Type</label>
+                        <select id="tenantType">
+                            <option value="">Select Type...</option>
+                            <option value="Individual">Individual</option>
+                            <option value="Company">Company</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tenantMobile">Mobile No.</label>
+                        <input type="text" id="tenantMobile" placeholder="e.g., 2547XXXXXXXX">
+                    </div>
+                    <div class="form-group">
+                        <label for="tenantFirstName">First Name</label>
+                        <input type="text" id="tenantFirstName" placeholder="John">
+                    </div>
+                    <div class="form-group">
+                        <label for="tenantMiddleName">Middle Name (Optional)</label>
+                        <input type="text" id="tenantMiddleName" placeholder="Doe">
+                    </div>
+                    <div class="form-group">
+                        <label for="tenantLastName">Last Name</label>
+                        <input type="text" id="tenantLastName" placeholder="Smith">
+                    </div>
+                    <div class="form-group">
+                        <label for="tenantIDType">Identification Type</label>
+                        <select id="tenantIDType">
+                            <option value="">Select ID Type...</option>
+                            <option value="National ID">National ID</option>
+                            <option value="Passport">Passport</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tenantIDNumber">ID Number</label>
+                        <input type="text" id="tenantIDNumber" placeholder="e.g., 12345678">
+                    </div>
+                    <div class="form-group">
+                        <label for="tenantGender">Gender</label>
+                        <select id="tenantGender">
+                            <option value="">Select Gender...</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tenantEmail">Email</label>
+                        <input type="email" id="tenantEmail" placeholder="john.doe@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="tenantAddress">Address</label>
+                        <input type="text" id="tenantAddress" placeholder="e.g., Nairobi, Kenya">
+                    </div>
+                    <div class="form-group">
+                        <label for="tenantUnit">Assign Unit</label>
+                        <select id="tenantUnit">
+                            <option value="">Select Vacant Unit...</option>
+                            <!-- Vacant units will be loaded here by JS -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tenantMoveInDate">Move-in Date</label>
+                        <input type="date" id="tenantMoveInDate">
+                    </div>
+                    <h3>Next of Kin</h3>
+                    <div class="form-group">
+                        <label for="nextOfKinName">Name</label>
+                        <input type="text" id="nextOfKinName" placeholder="Next of Kin Name">
+                    </div>
+                    <div class="form-group">
+                        <label for="nextOfKinPhone">Phone Number</label>
+                        <input type="text" id="nextOfKinPhone" placeholder="Next of Kin Phone Number">
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn-add" id="saveTenantBtn">Add Tenant</button>
+                        <button class="btn-cancel" id="cancelTenantBtn">Cancel</button>
+                    </div>
+                </section>
+
+                <section class="data-table section">
+                    <h2>All Tenants</h2>
+                    <div class="table-controls">
+                        <label>Show <select><option>10</option><option>25</option></select> entries</label>
+                        <input type="text" placeholder="Search...">
+                    </div>
+                    <div class="tenant-list">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Unit</th>
+                                    <th>Phone</th>
+                                    <th>Balance</th>
+                                    <th>Created On</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tenantsTableBody">
+                                <!-- Tenant rows will be dynamically loaded here by JS -->
+                                <tr>
+                                    <td>John Doe</td>
+                                    <td>A-101</td>
+                                    <td>254701000111</td>
+                                    <td>Ksh 0</td>
+                                    <td>2024-01-15</td>
+                                    <td>
+                                        <button class="btn-primary">Update Payment</button>
+                                        <button class="btn-info">Tenant Detail</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/main.js"></script>
+    <!-- Add page-specific JS if needed, e.g., <script src="js/tenants.js"></script> -->
+</body>
+</html>

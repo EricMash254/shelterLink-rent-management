@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShelterLink - Payments</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h3>ShelterLink</h3>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="landlord_index.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="properties.html"><i class="fas fa-building"></i> Properties</a></li>
+                    <li><a href="units.html"><i class="fas fa-door-open"></i> Units</a></li>
+                    <li><a href="tenants.html"><i class="fas fa-users"></i> Tenants</a></li>
+                    <li class="active"><a href="payments.html"><i class="fas fa-wallet"></i> Payments</a></li>
+                    <li><a href="expenses.html"><i class="fas fa-money-bill-wave"></i> Expenses</a></li>
+                    <li><a href="water-bills.html"><i class="fas fa-faucet"></i> Water Bills</a></li>
+                    <li><a href="reports.html"><i class="fas fa-chart-line"></i> Reports</a></li>
+                    <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+                    <li><a href="support.html"><i class="fas fa-life-ring"></i> Support</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content Wrapper -->
+        <div class="main-content-wrapper">
+            <!-- Main Header -->
+            <header class="main-header">
+                <div class="hamburger-menu">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <div class="search-bar">
+                    <input type="text" placeholder="Search individual...">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-demo">Watch Demo</button>
+                    <button class="btn-live">Go Live</button>
+                    <i class="fas fa-bell"></i>
+                    <i class="fas fa-user-circle"></i>
+                    <i class="fas fa-ellipsis-v"></i>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <section class="page-header">
+                    <h1>Payments Management</h1>
+                </section>
+
+                <section class="section">
+                    <h2>Record New Payment</h2>
+                    <div class="add-form">
+                        <div class="form-group">
+                            <label for="paymentProperty">Property</label>
+                            <select id="paymentProperty">
+                                <option value="">Select Property...</option>
+                                <!-- Properties will be loaded here by JS -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="paymentTenant">Tenant</label>
+                            <select id="paymentTenant">
+                                <option value="">Select Tenant...</option>
+                                <!-- Tenants will be loaded here by JS, filtered by property -->
+                            </select>
+                        </div>
+                        <!-- NEW UNIT FIELD ADDED HERE -->
+                        <div class="form-group">
+                            <label for="paymentUnit">Unit</label>
+                            <select id="paymentUnit" disabled>
+                                <option value="">Select Unit (auto-filled)</option>
+                            </select>
+                        </div>
+                        <!-------------------------------->
+                        <div class="form-group">
+                            <label for="amountPaid">Amount Paid (Ksh)</label>
+                            <input type="number" id="amountPaid" placeholder="e.g., 15000">
+                        </div>
+                        <div class="form-group">
+                            <label for="paymentDate">Date Paid</label>
+                            <input type="date" id="paymentDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="paymentMethod">Payment Method</label>
+                            <select id="paymentMethod">
+                                <option value="">Select Method...</option>
+                                <option value="M-Pesa">M-Pesa</option>
+                                <option value="Bank Transfer">Bank Transfer</option>
+                                <option value="Cash">Cash</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="paymentReference">Payment Reference</label>
+                            <input type="text" id="paymentReference" placeholder="e.g., M-Pesa transaction ID">
+                        </div>
+                        <div class="form-group">
+                            <label for="paymentDescription">Description</label>
+                            <textarea id="paymentDescription" rows="2" placeholder="e.g., July Rent"></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button class="btn-add" id="savePaymentBtn">Record Payment</button>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Upload Payments (Batch)</h2>
+                    <div class="upload-section">
+                        <p>Upload instructions: Please upload an Excel file (.xlsx or .xls) containing your payment data.</p>
+                        <p>The file should contain columns for Payment Mode, Bank Account, Reference No., Payment Date, Mobile, Unit Reference, Amount Paid, and Narration.</p>
+                        <div class="drag-drop-area">
+                            <i class="fas fa-file-excel"></i>
+                            <p>Drag & Drop your Excel file here</p>
+                            <p>or</p>
+                            <button class="btn-secondary"><i class="fas fa-download"></i> Download Sample Template</button>
+                            <button class="btn-primary"><i class="fas fa-folder-open"></i> Browse Files</button>
+                            <p class="accepted-formats">Accepted formats: .xlsx, .xls (Max size: 5MB)</p>
+                        </div>
+                        <div class="data-preview">
+                            <p>Upload a file to preview data.</p>
+                            <!-- Data preview table will go here -->
+                        </div>
+                        <div class="form-actions">
+                            <button class="btn-add" id="submitPaymentsBtn">Submit Payments</button>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="data-table section">
+                    <h2>All Payments History</h2>
+                    <div class="table-controls">
+                        <label>Show <select><option>10</option><option>25</option></select> entries</label>
+                        <input type="text" placeholder="Search...">
+                    </div>
+                    <div class="payment-list data-table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Tenant</th>
+                                    <th>Unit</th> <!-- Added to table header -->
+                                    <th>Amount</th>
+                                    <th>Type</th>
+                                    <th>Method</th>
+                                    <th>Reference</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="paymentsTableBody">
+                                <!-- Payment rows will be dynamically loaded here by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Dummy data (ensure it's consistent with main.js or a proper backend)
+            let propertiesData = JSON.parse(localStorage.getItem('properties')) || [
+                { id: 'prop1', name: 'Greenwood Apartments' },
+                { id: 'prop2', name: 'Riverside Villas' }
+            ];
+            let unitsData = JSON.parse(localStorage.getItem('units')) || [
+                { id: 'unit1', propertyId: 'prop1', number: 'A-101', monthlyRent: 15000, status: 'occupied' },
+                { id: 'unit2', propertyId: 'prop1', number: 'A-102', monthlyRent: 25000, status: 'occupied' },
+                { id: 'unit3', propertyId: 'prop2', number: 'V-01', monthlyRent: 45000, status: 'occupied' }
+            ];
+            let tenantsData = JSON.parse(localStorage.getItem('tenants')) || [
+                { id: 'tenant1', unitId: 'unit1', name: 'John Doe', phone: '254701000111', email: 'john.doe@example.com', moveInDate: '2024-01-15' },
+                { id: 'tenant2', unitId: 'unit2', name: 'Jane Smith', phone: '254702000222', email: 'jane.smith@example.com', moveInDate: '2024-03-01' },
+                { id: 'tenant3', unitId: 'unit3', name: 'David Lee', phone: '254703000333', email: 'david.lee@example.com', moveInDate: '2023-11-20' }
+            ];
+            let payments = JSON.parse(localStorage.getItem('payments')) || [
+                { id: 'pay1', tenantId: 'tenant1', unitId: 'unit1', amountPaid: 15000, date: '2025-06-05', type: 'rent', method: 'M-Pesa', reference: 'ABC123XYZ' },
+                { id: 'pay2', tenantId: 'tenant2', unitId: 'unit2', amountPaid: 25000, date: '2025-06-10', type: 'rent', method: 'Bank Transfer', reference: 'BANK456' },
+                { id: 'pay3', tenantId: 'tenant3', unitId: 'unit3', amountPaid: 45000, date: '2025-06-01', type: 'rent', method: 'Cash', reference: 'CASH789' }
+            ];
+
+            // Helper function to save data to localStorage (if not already in main.js)
+            function saveData() {
+                localStorage.setItem('payments', JSON.stringify(payments));
+                localStorage.setItem('tenants', JSON.stringify(tenantsData)); // Ensure tenants are also saved if modified
+                localStorage.setItem('units', JSON.stringify(unitsData)); // Ensure units are also saved if modified
+            }
+
+            const paymentPropertySelect = document.getElementById('paymentProperty');
+            const paymentTenantSelect = document.getElementById('paymentTenant');
+            const paymentUnitSelect = document.getElementById('paymentUnit'); // Get reference to new unit select
+
+            // Populate Property Dropdown
+            function populatePropertyDropdown() {
+                paymentPropertySelect.innerHTML = '<option value="">Select Property...</option>';
+                propertiesData.forEach(prop => {
+                    const option = document.createElement('option');
+                    option.value = prop.id;
+                    option.textContent = prop.name;
+                    paymentPropertySelect.appendChild(option);
+                });
+            }
+
+            // Populate Tenant Dropdown based on selected Property
+            function populateTenantDropdown(propertyId) {
+                paymentTenantSelect.innerHTML = '<option value="">Select Tenant...</option>';
+                paymentUnitSelect.innerHTML = '<option value="">Select Unit (auto-filled)</option>'; // Clear unit when tenant changes
+                paymentUnitSelect.disabled = true; // Disable unit until tenant is selected
+
+                if (propertyId) {
+                    const tenantsInProperty = tenantsData.filter(tenant => {
+                        const unit = unitsData.find(u => u.id === tenant.unitId);
+                        return unit && unit.propertyId === propertyId;
+                    });
+                    tenantsInProperty.forEach(tenant => {
+                        const option = document.createElement('option');
+                        option.value = tenant.id;
+                        option.textContent = tenant.name;
+                        paymentTenantSelect.appendChild(option);
+                    });
+                }
+            }
+
+            // Update Unit field based on selected Tenant
+            function updateUnitField(tenantId) {
+                paymentUnitSelect.innerHTML = '<option value="">Select Unit (auto-filled)</option>';
+                paymentUnitSelect.disabled = true;
+
+                if (tenantId) {
+                    const selectedTenant = tenantsData.find(t => t.id === tenantId);
+                    if (selectedTenant && selectedTenant.unitId) {
+                        const unit = unitsData.find(u => u.id === selectedTenant.unitId);
+                        if (unit) {
+                            const option = document.createElement('option');
+                            option.value = unit.id;
+                            option.textContent = unit.number;
+                            paymentUnitSelect.appendChild(option);
+                            paymentUnitSelect.value = unit.id; // Automatically select the unit
+                            paymentUnitSelect.disabled = true; // Keep it disabled as it's auto-filled
+                        }
+                    }
+                }
+            }
+
+            // Event Listeners for dropdown changes
+            paymentPropertySelect.addEventListener('change', (event) => {
+                populateTenantDropdown(event.target.value);
+            });
+
+            paymentTenantSelect.addEventListener('change', (event) => {
+                updateUnitField(event.target.value);
+            });
+
+            // Render Payments Table
+            function renderPaymentsTable() {
+                const tableBody = document.getElementById('paymentsTableBody');
+                tableBody.innerHTML = '';
+                payments.forEach(payment => {
+                    const tenant = tenantsData.find(t => t.id === payment.tenantId);
+                    const unit = unitsData.find(u => u.id === payment.unitId);
+                    const row = tableBody.insertRow();
+                    row.innerHTML = `
+                        <td>${payment.date}</td>
+                        <td>${tenant ? tenant.name : 'N/A'}</td>
+                        <td>${unit ? unit.number : 'N/A'}</td> <!-- Display unit number -->
+                        <td>Ksh ${payment.amountPaid.toLocaleString()}</td>
+                        <td>${payment.type}</td>
+                        <td>${payment.method}</td>
+                        <td>${payment.reference}</td>
+                        <td class="actions-column">
+                            <button class="btn-edit"><i class="fas fa-edit"></i> Edit</button>
+                            <button class="btn-delete"><i class="fas fa-trash-alt"></i> Delete</button>
+                        </td>
+                    `;
+                });
+            }
+
+            // Initial population on page load
+            populatePropertyDropdown();
+            renderPaymentsTable();
+
+            // Example of adding a new payment (you'd hook this up to a save button)
+            const savePaymentBtn = document.getElementById('savePaymentBtn');
+            if (savePaymentBtn) {
+                savePaymentBtn.addEventListener('click', () => {
+                    const propertyId = paymentPropertySelect.value;
+                    const tenantId = paymentTenantSelect.value;
+                    const unitId = paymentUnitSelect.value; // Get the unit ID
+                    const amountPaid = document.getElementById('amountPaid').value;
+                    const paymentDate = document.getElementById('paymentDate').value;
+                    const paymentMethod = document.getElementById('paymentMethod').value;
+                    const paymentReference = document.getElementById('paymentReference').value;
+                    const paymentDescription = document.getElementById('paymentDescription').value;
+
+                    if (!propertyId || !tenantId || !unitId || !amountPaid || !paymentDate || !paymentMethod) {
+                        alert('Please fill all required payment fields (Property, Tenant, Unit, Amount, Date, Method).');
+                        return;
+                    }
+
+                    const newPayment = {
+                        id: `pay${payments.length + 1}`, // Simple ID generation
+                        tenantId: tenantId,
+                        unitId: unitId, // Store unit ID
+                        amountPaid: parseFloat(amountPaid),
+                        date: paymentDate,
+                        type: 'rent', // Assuming default to rent, could be a select field
+                        method: paymentMethod,
+                        reference: paymentReference,
+                        description: paymentDescription,
+                        status: 'paid'
+                    };
+
+                    payments.push(newPayment);
+                    saveData();
+                    renderPaymentsTable(); // Re-render table to show new payment
+                    alert('Payment recorded successfully!');
+                    // Clear form fields
+                    document.getElementById('amountPaid').value = '';
+                    document.getElementById('paymentDate').value = '';
+                    document.getElementById('paymentMethod').value = '';
+                    document.getElementById('paymentReference').value = '';
+                    document.getElementById('paymentDescription').value = '';
+                    paymentPropertySelect.value = '';
+                    paymentTenantSelect.value = '';
+                    paymentUnitSelect.value = '';
+                    paymentUnitSelect.disabled = true;
+                });
+            }
+        });
+    </script>
+</body>
+</html>

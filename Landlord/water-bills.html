@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShelterLink - Water Bills</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h3>ShelterLink</h3>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="landlord_index.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="properties.html"><i class="fas fa-building"></i> Properties</a></li>
+                    <li><a href="units.html"><i class="fas fa-door-open"></i> Units</a></li>
+                    <li><a href="tenants.html"><i class="fas fa-users"></i> Tenants</a></li>
+                    <li><a href="payments.html"><i class="fas fa-wallet"></i> Payments</a></li>
+                    <li><a href="expenses.html"><i class="fas fa-money-bill-wave"></i> Expenses</a></li>
+                    <li class="active"><a href="water-bills.html"><i class="fas fa-faucet"></i> Water Bills</a></li>
+                    <li><a href="reports.html"><i class="fas fa-chart-line"></i> Reports</a></li>
+                    <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+                    <li><a href="support.html"><i class="fas fa-life-ring"></i> Support</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content Wrapper -->
+        <div class="main-content-wrapper">
+            <!-- Main Header -->
+            <header class="main-header">
+                <div class="hamburger-menu">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <div class="search-bar">
+                    <input type="text" placeholder="Search individual...">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="header-actions">
+                    <i class="fas fa-bell"></i>
+                    <i class="fas fa-user-circle"></i>
+                    <i class="fas fa-ellipsis-v"></i>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <section class="page-header">
+                    <h1>Water Bills Management</h1>
+                    <button class="btn-add" id="generateBillBtn"><i class="fas fa-plus"></i> Generate New Bill</button>
+                </section>
+
+                <section class="add-form" id="generateBillForm" style="display: none;">
+                    <h2>Generate Water Bill</h2>
+                    <div class="form-group">
+                        <label>Bill For:</label>
+                        <div>
+                            <input type="radio" id="billAllTenants" name="billTarget" value="all" checked>
+                            <label for="billAllTenants">All Tenants</label>
+                            <input type="radio" id="billSingleTenant" name="billTarget" value="single">
+                            <label for="billSingleTenant">Single Tenant</label>
+                            <input type="radio" id="billSelectTenants" name="billTarget" value="select">
+                            <label for="billSelectTenants">Select Tenants</label>
+                        </div>
+                    </div>
+                    <div class="form-group" id="singleTenantSelect" style="display: none;">
+                        <label for="selectedTenant">Select Tenant</label>
+                        <select id="selectedTenant">
+                            <option value="">Choose Tenant...</option>
+                            <!-- Tenants will be loaded here by JS -->
+                        </select>
+                    </div>
+                    <div class="form-group" id="selectTenantsMulti" style="display: none;">
+                        <label>Select Tenants</label>
+                        <div class="checkbox-list">
+                            <!-- Checkboxes for tenants will be loaded here by JS -->
+                            <label><input type="checkbox" value="tenant1"> John Doe (A-101)</label>
+                            <label><input type="checkbox" value="tenant2"> Jane Smith (A-102)</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="billMonth">Month to Bill</label>
+                        <input type="month" id="billMonth">
+                    </div>
+                    <div class="form-group">
+                        <label for="billAmount">Bill Amount (Ksh)</label>
+                        <input type="number" id="billAmount" placeholder="e.g., 500">
+                    </div>
+                    <div class="form-group">
+                        <label>Notification Options:</label>
+                        <div>
+                            <input type="checkbox" id="sendSmsAlert">
+                            <label for="sendSmsAlert">Send SMS Alert</label>
+                            <input type="checkbox" id="sendEmailInvoice">
+                            <label for="sendEmailInvoice">Send Invoice on Email</label>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn-add" id="saveBillBtn">Generate Bill</button>
+                        <button class="btn-cancel" id="cancelBillBtn">Cancel</button>
+                    </div>
+                </section>
+
+                <section class="data-table section">
+                    <h2>All Water Bills</h2>
+                    <div class="table-controls">
+                        <label>Show <select><option>10</option><option>25</option></select> entries</label>
+                        <input type="text" placeholder="Search...">
+                    </div>
+                    <div class="water-bill-list">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Tenant</th>
+                                    <th>Unit</th>
+                                    <th>Month</th>
+                                    <th>Amount</th>
+                                    <th>Billed Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="waterBillsTableBody">
+                                <!-- Water bill rows will be dynamically loaded here by JS -->
+                                <tr>
+                                    <td>John Doe</td>
+                                    <td>A-101</td>
+                                    <td>June 2025</td>
+                                    <td>Ksh 500</td>
+                                    <td>2025-06-01</td>
+                                    <td><span class="status-badge occupied">Paid</span></td>
+                                    <td>
+                                        <button class="btn-primary">Mark as Paid</button>
+                                        <button class="btn-delete"><i class="fas fa-trash-alt"></i> Delete</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/main.js"></script>
+    <!-- Add page-specific JS if needed, e.g., <script src="js/water-bills.js"></script> -->
+</body>
+</html>

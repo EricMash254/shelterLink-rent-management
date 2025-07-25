@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShelterLink - My Bills</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h3>ShelterLink</h3>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="tenant_index.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li class="active"><a href="bills.html"><i class="fas fa-file-invoice"></i> My Bills</a></li>
+                    <li><a href="payments.html"><i class="fas fa-wallet"></i> My Payments</a></li>
+                    <li><a href="messages.html"><i class="fas fa-comments"></i> Messages</a></li>
+                    <li><a href="support.html"><i class="fas fa-life-ring"></i> Support</a></li>
+                    <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content Wrapper -->
+        <div class="main-content-wrapper">
+            <!-- Main Header -->
+            <header class="main-header">
+                <div class="hamburger-menu">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <div class="search-bar">
+                    <input type="text" placeholder="Search bills...">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="header-actions">
+                    <i class="fas fa-bell"></i>
+                    <i class="fas fa-user-circle"></i>
+                    <i class="fas fa-ellipsis-v"></i>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <section class="page-header">
+                    <h1>My Bills</h1>
+                    <button class="btn-add" id="payAllBillsBtn"><i class="fas fa-money-check-alt"></i> Pay All Outstanding</button>
+                </section>
+
+                <section class="section">
+                    <h2>Outstanding Bills Overview</h2>
+                    <div class="card-grid">
+                        <div class="card">
+                            <i class="fas fa-exclamation-triangle card-icon"></i>
+                            <h3>Total Outstanding</h3>
+                            <div class="value" id="totalOutstanding">Ksh 0</div>
+                            <p class="description">Across all bill types</p>
+                        </div>
+                        <div class="card">
+                            <i class="fas fa-calendar-times card-icon"></i>
+                            <h3>Overdue Bills</h3>
+                            <div class="value" id="overdueBillsCount">0</div>
+                            <p class="description">Bills past their due date</p>
+                        </div>
+                        <div class="card">
+                            <i class="fas fa-file-invoice-dollar card-icon"></i>
+                            <h3>Upcoming Bills</h3>
+                            <div class="value" id="upcomingBillsCount">0</div>
+                            <p class="description">Bills due soon</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="data-table section">
+                    <h2>All Bills History</h2>
+                    <div class="table-controls">
+                        <label>Show <select><option>10</option><option>25</option></select> entries</label>
+                        <input type="text" placeholder="Search bills...">
+                    </div>
+                    <div class="bills-list data-table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Bill ID</th>
+                                    <th>Type</th>
+                                    <th>Month/Period</th>
+                                    <th>Amount</th>
+                                    <th>Due Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="billsTableBody">
+                                <!-- Bills will be dynamically loaded here by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script src="../Landlord/js/main.js"></script> <!-- Reusing main.js for sidebar toggle -->
+    <script>
+        // Prevent right-click context menu
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Dummy Data for Bills
+            let bills = [
+                { id: 'B001', type: 'Rent', month: 'July 2025', amount: 20000, dueDate: '2025-07-01', status: 'Overdue' },
+                { id: 'B002', type: 'Water', month: 'June 2025', amount: 750, dueDate: '2025-06-15', status: 'Paid' },
+                { id: 'B003', type: 'Service Charge', month: 'July 2025', amount: 1000, dueDate: '2025-07-01', status: 'Overdue' },
+                { id: 'B004', type: 'Rent', month: 'August 2025', amount: 20000, dueDate: '2025-08-01', status: 'Upcoming' },
+                { id: 'B005', type: 'Water', month: 'July 2025', amount: 800, dueDate: '2025-07-15', status: 'Upcoming' }
+            ];
+
+            function renderBillsTable() {
+                const tableBody = document.getElementById('billsTableBody');
+                tableBody.innerHTML = '';
+                let totalOutstanding = 0;
+                let overdueBillsCount = 0;
+                let upcomingBillsCount = 0;
+
+                bills.forEach(bill => {
+                    const row = tableBody.insertRow();
+                    let statusClass = '';
+                    let actionsHtml = '';
+
+                    if (bill.status === 'Paid') {
+                        statusClass = 'paid';
+                        actionsHtml = '<button class="btn-info"><i class="fas fa-eye"></i> View Receipt</button>';
+                    } else if (bill.status === 'Overdue') {
+                        statusClass = 'overdue';
+                        actionsHtml = `<button class="btn-primary pay-bill-btn" data-bill-id="${bill.id}" data-amount="${bill.amount}"><i class="fas fa-money-bill-wave"></i> Pay Now</button>`;
+                        totalOutstanding += bill.amount;
+                        overdueBillsCount++;
+                    } else if (bill.status === 'Upcoming') {
+                        statusClass = 'pending'; // Using 'pending' for upcoming to match existing badge styles
+                        actionsHtml = `<button class="btn-primary pay-bill-btn" data-bill-id="${bill.id}" data-amount="${bill.amount}"><i class="fas fa-money-bill-wave"></i> Pay Now</button>`;
+                        totalOutstanding += bill.amount;
+                        upcomingBillsCount++;
+                    }
+
+                    row.innerHTML = `
+                        <td>${bill.id}</td>
+                        <td>${bill.type}</td>
+                        <td>${bill.month}</td>
+                        <td>Ksh ${bill.amount.toLocaleString()}</td>
+                        <td>${bill.dueDate}</td>
+                        <td><span class="status-badge ${statusClass}">${bill.status}</span></td>
+                        <td class="actions-column">${actionsHtml}</td>
+                    `;
+                });
+
+                document.getElementById('totalOutstanding').textContent = `Ksh ${totalOutstanding.toLocaleString()}`;
+                document.getElementById('overdueBillsCount').textContent = overdueBillsCount;
+                document.getElementById('upcomingBillsCount').textContent = upcomingBillsCount;
+
+                // Add event listeners for "Pay Now" buttons
+                document.querySelectorAll('.pay-bill-btn').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const billId = this.dataset.billId;
+                        const billAmount = this.dataset.amount;
+                        Swal.fire({
+                            title: 'Confirm Payment',
+                            text: `Are you sure you want to pay Ksh ${parseFloat(billAmount).toLocaleString()} for Bill ID ${billId}?`,
+                            icon: 'question',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3498db',
+                            cancelButtonColor: '#e74c3c',
+                            confirmButtonText: 'Yes, Pay it!'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // Simulate payment processing
+                                const billIndex = bills.findIndex(b => b.id === billId);
+                                if (billIndex !== -1) {
+                                    bills[billIndex].status = 'Paid';
+                                    Swal.fire(
+                                        'Paid!',
+                                        `Bill ID ${billId} has been marked as paid.`,
+                                        'success'
+                                    );
+                                    renderBillsTable(); // Re-render table after payment
+                                }
+                            }
+                        });
+                    });
+                });
+            }
+
+            // Pay All Outstanding Bills Button
+            document.getElementById('payAllBillsBtn').addEventListener('click', function() {
+                const outstandingBills = bills.filter(bill => bill.status === 'Overdue' || bill.status === 'Upcoming');
+                const totalAmount = outstandingBills.reduce((sum, bill) => sum + bill.amount, 0);
+
+                if (outstandingBills.length === 0) {
+                    Swal.fire({
+                        icon: 'info',
+                        title: 'No Outstanding Bills',
+                        text: 'You currently have no outstanding or upcoming bills to pay.',
+                        confirmButtonText: 'OK'
+                    });
+                    return;
+                }
+
+                Swal.fire({
+                    title: 'Confirm Payment for All Outstanding Bills',
+                    text: `You are about to pay a total of Ksh ${totalAmount.toLocaleString()} for ${outstandingBills.length} outstanding bills. Confirm?`,
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3498db',
+                    cancelButtonColor: '#e74c3c',
+                    confirmButtonText: 'Yes, Pay All!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        outstandingBills.forEach(bill => {
+                            const billIndex = bills.findIndex(b => b.id === bill.id);
+                            if (billIndex !== -1) {
+                                bills[billIndex].status = 'Paid';
+                            }
+                        });
+                        Swal.fire(
+                            'All Paid!',
+                            'All outstanding and upcoming bills have been marked as paid.',
+                            'success'
+                        );
+                        renderBillsTable(); // Re-render table after bulk payment
+                    }
+                });
+            });
+
+            renderBillsTable(); // Initial render
+        });
+    </script>
+</body>
+</html>

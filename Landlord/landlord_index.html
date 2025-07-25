@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShelterLink - Landlord Dashboard</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <h3>ShelterLink</h3>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li class="active"><a href="landlord_index.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="properties.html"><i class="fas fa-building"></i> Properties</a></li>
+                    <li><a href="units.html"><i class="fas fa-door-open"></i> Units</a></li>
+                    <li><a href="tenants.html"><i class="fas fa-users"></i> Tenants</a></li>
+                    <li><a href="payments.html"><i class="fas fa-wallet"></i> Payments</a></li>
+                    <li><a href="expenses.html"><i class="fas fa-money-bill-wave"></i> Expenses</a></li>
+                    <li><a href="water-bills.html"><i class="fas fa-faucet"></i> Water Bills</a></li>
+                    <li><a href="reports.html"><i class="fas fa-chart-line"></i> Reports</a></li>
+                    <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+                    <li><a href="support.html"><i class="fas fa-life-ring"></i> Support</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <div class="main-content-wrapper">
+            <header class="main-header">
+                <div class="hamburger-menu">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <div class="search-bar">
+                    <input type="text" placeholder="Search individual...">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="header-actions">
+                    <i class="fas fa-bell"></i>
+                    <i class="fas fa-user-circle"></i>
+                    <i class="fas fa-ellipsis-v"></i>
+                </div>
+            </header>
+
+            <main class="main-content">
+                <section class="dashboard-overview">
+                    <h1>Good Morning</h1>
+                    <p>Welcome to your ShelterLink dashboard</p>
+
+                    <div class="summary-cards">
+                        <div class="card">
+                            <i class="fas fa-building"></i>
+                            <h3>Properties</h3>
+                            <p id="totalProperties">0</p>
+                        </div>
+                        <div class="card">
+                            <i class="fas fa-users"></i>
+                            <h3>Occupancy</h3>
+                            <p id="occupancyPercentage">0%</p>
+                        </div>
+                        <div class="card">
+                            <i class="fas fa-door-open"></i>
+                            <h3>Vacant Units</h3>
+                            <p id="vacantUnits">0</p>
+                        </div>
+                        <div class="card">
+                            <i class="fas fa-house-user"></i>
+                            <h3>Occupied Units</h3>
+                            <p id="occupiedUnits">0</p>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-sections">
+                        <div class="section financial-overview">
+                            <h2>Financial Overview</h2>
+                            <div class="financial-details">
+                                <div class="balance-card">
+                                    <h3>Property Balance</h3>
+                                    <p id="propertyBalance">Ksh 0</p>
+                                    <button>Withdraw Funds</button>
+                                </div>
+                                <div class="balance-card">
+                                    <h3>Accrued Amount</h3>
+                                    <p id="accruedAmount">Ksh 0</p>
+                                    <button>View Breakdown</button>
+                                </div>
+                                <div class="balance-card">
+                                    <h3>Wallet Balance</h3>
+                                    <p id="walletBalance">Ksh 0</p>
+                                    <button>View Statements</button>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <h3>Monthly Revenue Collections</h3>
+                                <canvas id="revenueChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="section recent-activities">
+                            <h2>Recent Collection</h2>
+                            <div class="collection-summary">
+                                <p>Billed: <span id="billedAmount">Ksh 0</span></p>
+                                <p>Collected: <span id="collectedAmount">Ksh 0</span></p>
+                                <p>Percentage Collection: <span id="collectionPercentage">0%</span></p>
+                                <button>View Report</button>
+                            </div>
+
+                            <h2>Property Balances</h2>
+                            <div id="propertyBalances">
+                                </div>
+                            <button>View all Properties</button>
+
+                            <h2>Outstanding Balances Overview</h2>
+                            <div id="outstandingBalances">
+                                </div>
+                            <button>View all Occupants</button>
+                        </div>
+
+                        <div class="section property-summary">
+                            <h2>Property Summary</h2>
+                            <p><span id="summaryVacant">0</span> Vacant</p>
+                            <p><span id="summaryOccupied">0</span> Occupied</p>
+                            <p><span id="summaryTotalUnits">0</span> Total Units</p>
+                            <p>Occupancy: <span id="summaryOccupancyPercentage">0%</span></p>
+                            <button>View Report</button>
+
+                            <h2>Utilities Summary</h2>
+                            <div id="utilitiesSummary">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Category</th>
+                                            <th>Total</th>
+                                            <th>Paid</th>
+                                            <th>Balance</th>
+                                            <th>Percentage Collection</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Water</td>
+                                            <td id="waterTotal">0</td>
+                                            <td id="waterPaid">0</td>
+                                            <td id="waterBalance">0</td>
+                                            <td id="waterPercentage">0%</td>
+                                        </tr>
+                                        </tbody>
+                                </table>
+                                <button>View Breakdown</button>
+                            </div>
+
+                            <h2>General Reports</h2>
+                            <ul>
+                                <li><a href="reports.html#financial">Financial Reports</a> <button>View Report</button></li>
+                                <li><a href="reports.html#occupancy">Occupancy Reports</a> <button>View Report</button></li>
+                                <li><a href="reports.html#property">Property Reports</a> <button>View Report</button></li>
+                                <li><a href="reports.html#monthly">Monthly Reports</a> <button>View Report</button></li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

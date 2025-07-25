@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShelterLink - Effortless Property Management</title>
+    <link rel="stylesheet" href="assets/css/landing.css"> <!-- New CSS file for landing page -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header class="navbar">
+        <div class="container">
+            <h1 class="logo">ShelterLink</h1>
+            <div class="menu-toggle" id="mobile-menu">
+                <i class="fas fa-bars"></i>
+            </div>
+            <nav id="mainNav">
+                <ul>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero-section">
+        <div class="container">
+            <div class="hero-content">
+                <h2>Simplify Your Property Management Journey</h2>
+                <p>Effortless rent collection, transparent tracking, and seamless communication for landlords and tenants.</p>
+                <div class="cta-buttons">
+                    <a href="login.html" class="btn btn-landlord">Landlord Login <i class="fas fa-arrow-right"></i></a>
+                    <a href="Tenants/tenant_index.html" class="btn btn-tenant">Tenant Login <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="features-section">
+        <div class="container">
+            <h3>Why Choose ShelterLink?</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <i class="fas fa-wallet feature-icon"></i>
+                    <h4>Automated Payments</h4>
+                    <p>Track rent and water bill payments with ease. Get real-time updates and overdue alerts.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-comments feature-icon"></i>
+                    <h4>Seamless Communication</h4>
+                    <p>Direct messaging between landlords and tenants for quick issue resolution and updates.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-chart-line feature-icon"></i>
+                    <h4>Financial Insights</h4>
+                    <p>Monitor income, track expenses, and generate comprehensive financial reports.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-house-user feature-icon"></i>
+                    <h4>Tenant Records</h4>
+                    <p>Maintain detailed records of tenant history, move-in/out dates, and contact information.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-bell feature-icon"></i>
+                    <h4>Smart Notifications</h4>
+                    <p>Automated reminders for rent due dates, new bills, and important announcements.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-building feature-icon"></i>
+                    <h4>Multi-Property Support</h4>
+                    <p>Manage multiple houses and units from a single, intuitive dashboard.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="about-section">
+        <div class="container">
+            <h3>About ShelterLink</h3>
+            <p>ShelterLink is designed to revolutionize property management for landlords and tenants. We understand the complexities of rental properties and aim to provide a simple, efficient, and transparent platform that fosters better relationships and streamlines operations. Our goal is to make managing your properties or your tenancy as smooth as possible.</p>
+            <p>Built with care in Kenya, for the Kenyan market, ShelterLink focuses on local needs while providing a world-class experience.</p>
+        </div>
+    </section>
+
+    <footer id="contact" class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section about">
+                    <h3>ShelterLink</h3>
+                    <p>Your trusted partner in modern property management.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section links">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="Landlord/landlord_index.html">Landlord Portal</a></li>
+                        <li><a href="Tenants/tenant_index.html">Tenant Portal</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section contact-info">
+                    <h3>Contact Us</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> Nairobi, Kenya</p>
+                    <p><i class="fas fa-phone"></i> +254 7XX XXX XXX</p>
+                    <p><i class="fas fa-envelope"></i> info@shelterlink.com</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                &copy; 2025 ShelterLink. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mainNav = document.getElementById('mainNav');
+
+            mobileMenu.addEventListener('click', function() {
+                mainNav.classList.toggle('active');
+                mobileMenu.querySelector('i').classList.toggle('fa-bars');
+                mobileMenu.querySelector('i').classList.toggle('fa-times'); // Change icon to 'X'
+            });
+
+            // Close menu when a nav link is clicked (for smoother mobile experience)
+            mainNav.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', function() {
+                    if (mainNav.classList.contains('active')) {
+                        mainNav.classList.remove('active');
+                        mobileMenu.querySelector('i').classList.remove('fa-times');
+                        mobileMenu.querySelector('i').classList.add('fa-bars');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

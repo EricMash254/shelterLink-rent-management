@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShelterLink - Tenant Settings</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h3>ShelterLink</h3>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="bills.html"><i class="fas fa-file-invoice"></i> My Bills</a></li>
+                    <li><a href="payments.html"><i class="fas fa-wallet"></i> My Payments</a></li>
+                    <li><a href="messages.html"><i class="fas fa-comments"></i> Messages</a></li>
+                    <li><a href="support.html"><i class="fas fa-life-ring"></i> Support</a></li>
+                    <li class="active"><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content Wrapper -->
+        <div class="main-content-wrapper">
+            <!-- Main Header -->
+            <header class="main-header">
+                <div class="hamburger-menu">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <div class="search-bar">
+                    <input type="text" placeholder="Search settings...">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="header-actions">
+                    <i class="fas fa-bell"></i>
+                    <i class="fas fa-user-circle"></i>
+                    <i class="fas fa-ellipsis-v"></i>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <section class="page-header">
+                    <h1>Settings</h1>
+                </section>
+
+                <section class="section">
+                    <h2>Personal Information</h2>
+                    <div class="add-form">
+                        <div class="form-group">
+                            <label for="tenantName">Full Name</label>
+                            <input type="text" id="tenantName" value="Alice Johnson">
+                        </div>
+                        <div class="form-group">
+                            <label for="tenantEmail">Email Address</label>
+                            <input type="email" id="tenantEmail" value="alice.johnson@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="tenantPhone">Phone Number</label>
+                            <input type="text" id="tenantPhone" value="2547XXXXXXXX">
+                        </div>
+                        <div class="form-group">
+                            <label for="tenantUnit">Assigned Unit</label>
+                            <input type="text" id="tenantUnit" value="A-101 (Greenwood Apartments)" disabled>
+                        </div>
+                        <div class="form-actions">
+                            <button class="btn-primary" id="saveProfileBtn">Save Profile</button>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Change Password</h2>
+                    <div class="add-form">
+                        <div class="form-group">
+                            <label for="currentPassword">Current Password</label>
+                            <input type="password" id="currentPassword" placeholder="Enter current password">
+                        </div>
+                        <div class="form-group">
+                            <label for="newPassword">New Password</label>
+                            <input type="password" id="newPassword" placeholder="Enter new password">
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmNewPassword">Confirm New Password</label>
+                            <input type="password" id="confirmNewPassword" placeholder="Confirm new password">
+                        </div>
+                        <div class="form-actions">
+                            <button class="btn-primary" id="changePasswordBtn">Change Password</button>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2>Notification Preferences</h2>
+                    <div class="add-form">
+                        <div class="form-group">
+                            <label>Email Notifications</label>
+                            <input type="checkbox" id="emailRentReminders" checked>
+                            <label for="emailRentReminders">Rent Payment Reminders</label><br>
+                            <input type="checkbox" id="emailBillUpdates">
+                            <label for="emailBillUpdates">New Bill Updates</label><br>
+                            <input type="checkbox" id="emailAnnouncement">
+                            <label for="emailAnnouncement">General Announcements</label>
+                        </div>
+                        <div class="form-group">
+                            <label>SMS Notifications</label>
+                            <input type="checkbox" id="smsRentReminders" checked>
+                            <label for="smsRentReminders">Rent Payment Reminders</label><br>
+                            <input type="checkbox" id="smsBillUpdates">
+                            <label for="smsBillUpdates">New Bill Updates</label>
+                        </div>
+                        <div class="form-actions">
+                            <button class="btn-primary" id="saveNotificationsBtn">Save Preferences</button>
+                        </div>
+                    </div>
+                </section>
+
+
+            </main>
+        </div>
+    </div>
+
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script src="../Landlord/js/main.js"></script> <!-- This loads the global dark mode initialization -->
+    <script>
+        // Prevent right-click context menu - this can also be in main.js if you want it site-wide
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        document.addEventListener('DOMContentLoaded', function() {
+
+            // Dummy Data (replace with actual data fetched from backend)
+            let tenantProfile = {
+                fullName: "Alice Johnson",
+                email: "alice.johnson@example.com",
+                phone: "254712345678",
+                unit: "A-101 (Greenwood Apartments)",
+                notifications: {
+                    emailRentReminders: true,
+                    emailBillUpdates: false,
+                    emailAnnouncement: false,
+                    smsRentReminders: true,
+                    smsBillUpdates: false
+                }
+            };
+
+            // Populate form fields with dummy data
+            document.getElementById('tenantName').value = tenantProfile.fullName;
+            document.getElementById('tenantEmail').value = tenantProfile.email;
+            document.getElementById('tenantPhone').value = tenantProfile.phone;
+            document.getElementById('tenantUnit').value = tenantProfile.unit;
+
+            document.getElementById('emailRentReminders').checked = tenantProfile.notifications.emailRentReminders;
+            document.getElementById('emailBillUpdates').checked = tenantProfile.notifications.emailBillUpdates;
+            document.getElementById('emailAnnouncement').checked = tenantProfile.notifications.emailAnnouncement;
+            document.getElementById('smsRentReminders').checked = tenantProfile.notifications.smsRentReminders;
+            document.getElementById('smsBillUpdates').checked = tenantProfile.notifications.smsBillUpdates;
+
+            // Save Profile Button
+            document.getElementById('saveProfileBtn').addEventListener('click', function() {
+                const newName = document.getElementById('tenantName').value.trim();
+                const newEmail = document.getElementById('tenantEmail').value.trim();
+                const newPhone = document.getElementById('tenantPhone').value.trim();
+
+                if (!newName || !newEmail || !newPhone) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Missing Information',
+                        text: 'Please fill in all profile fields.',
+                        confirmButtonText: 'OK'
+                    });
+                    return;
+                }
+
+                tenantProfile.fullName = newName;
+                tenantProfile.email = newEmail;
+                tenantProfile.phone = newPhone;
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Profile Saved!',
+                    text: 'Your personal information has been updated.',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                // In a real app, you'd send this data to your backend
+            });
+
+            // Change Password Button
+            document.getElementById('changePasswordBtn').addEventListener('click', function() {
+                const currentPass = document.getElementById('currentPassword').value;
+                const newPass = document.getElementById('newPassword').value;
+                const confirmNewPass = document.getElementById('confirmNewPassword').value;
+
+                if (!currentPass || !newPass || !confirmNewPass) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Missing Information',
+                        text: 'Please fill in all password fields.',
+                        confirmButtonText: 'OK'
+                    });
+                    return;
+                }
+
+                if (newPass !== confirmNewPass) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Password Mismatch',
+                        text: 'New password and confirm password do not match.',
+                        confirmButtonText: 'OK'
+                    });
+                    return;
+                }
+
+                if (newPass.length < 6) { // Example: minimum password length
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Weak Password',
+                        text: 'New password must be at least 6 characters long.',
+                        confirmButtonText: 'OK'
+                    });
+                    return;
+                }
+
+                // Dummy check for current password (replace with actual backend validation)
+                if (currentPass !== "tenantpass") { // Assuming a dummy current password for demo
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Incorrect Password',
+                        text: 'The current password you entered is incorrect.',
+                        confirmButtonText: 'OK'
+                    });
+                    return;
+                }
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Password Changed!',
+                    text: 'Your password has been successfully updated.',
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(() => {
+                    // Clear password fields
+                    document.getElementById('currentPassword').value = '';
+                    document.getElementById('newPassword').value = '';
+                    document.getElementById('confirmNewPassword').value = '';
+                });
+                // In a real app, you'd send this to your backend for password update
+            });
+
+            // Save Notifications Button
+            document.getElementById('saveNotificationsBtn').addEventListener('click', function() {
+                tenantProfile.notifications.emailRentReminders = document.getElementById('emailRentReminders').checked;
+                tenantProfile.notifications.emailBillUpdates = document.getElementById('emailBillUpdates').checked;
+                tenantProfile.notifications.emailAnnouncement = document.getElementById('emailAnnouncement').checked;
+                tenantProfile.notifications.smsRentReminders = document.getElementById('smsRentReminders').checked;
+                tenantProfile.notifications.smsBillUpdates = document.getElementById('smsBillUpdates').checked;
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Preferences Saved!',
+                    text: 'Your notification preferences have been updated.',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                // In a real app, you'd send this data to your backend
+            });
+        });
+    </script>
+</body>
+</html>
